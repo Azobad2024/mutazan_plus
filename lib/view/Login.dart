@@ -24,7 +24,8 @@ class _LoginScreenWithWelcomeState extends State<LoginScreenWithWelcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey.shade600,
+      backgroundColor: Color(0xFF718FA2), // اللون الأساسي للخلفية
+      // backgroundColor: Colors.blueGrey.shade600,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -37,7 +38,7 @@ class _LoginScreenWithWelcomeState extends State<LoginScreenWithWelcome> {
                 : MediaQuery.of(context).size.height / 2 - 40,
             left: 0,
             right: 0,
-            child: Center(
+            child: const Center(
               child: Text(
                 'مرحباً بكم',
                 style: TextStyle(
