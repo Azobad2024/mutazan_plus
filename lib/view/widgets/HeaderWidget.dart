@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class HeaderWidget extends StatelessWidget {
   @override
@@ -8,18 +9,20 @@ class HeaderWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'متـازن',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          Image.asset("assets/images/asd01.png", height: 100,),
+          // Positioned.fill(
+          //   child: SvgPicture.asset(
+          //     'assets/Svg/icon_app.svg', // مسار الشعار
+          //     height: 30, ),
+          // ),
+          const CircleAvatar(
+            radius: 24,
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.person_outline,
+              size: 28,
+              // color: Colors.white,
             ),
-          ),
-          Icon(
-            Icons.person_outline,
-            size: 28,
-            color: Colors.white,
           ),
         ],
       ),

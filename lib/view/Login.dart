@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mutazan_plus/view/widgets/LoginScreen.dart';
 
+import '../constants.dart';
+
 class LoginScreenWithWelcome extends StatefulWidget {
   @override
   _LoginScreenWithWelcomeState createState() => _LoginScreenWithWelcomeState();
@@ -24,7 +26,7 @@ class _LoginScreenWithWelcomeState extends State<LoginScreenWithWelcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF718FA2), // اللون الأساسي للخلفية
+      backgroundColor: backgroundColor,
       // backgroundColor: Colors.blueGrey.shade600,
       resizeToAvoidBottomInset: false,
       body: Stack(

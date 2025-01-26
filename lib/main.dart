@@ -12,6 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: "Khandevane"
+      ),
       // تعيين اللغة إلى العربية
       locale: Locale('ar', 'AE'),
       // تحديد إعدادات الترجمة لدعم النصوص من اليمين إلى اليسار
@@ -30,7 +33,11 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: LoginScreenWithWelcome(), // شاشة الترحيب
+      home: LoginScreenWithWelcome(),
+      routes: {
+        "/Home": (context) => Home(),
+
+      },
     );
   }
 }

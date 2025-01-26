@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants.dart';
+
 class CustomElevatedButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -15,7 +17,7 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueGrey.shade600,
+        backgroundColor: backgroundColor,
         padding: EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10), // تحديد نصف القطر للحواف

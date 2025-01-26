@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 class FooterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    return  const Padding(
+      padding: EdgeInsets.symmetric(vertical: 15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             '30% من الفواتير تبدو جيدة.',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 20,
               color: Colors.white,
             ),
           ),

@@ -10,7 +10,7 @@ class ContainerRadius extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       height: MediaQuery.of(context).size.height * 0.8,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(60),
