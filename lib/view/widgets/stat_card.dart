@@ -12,10 +12,18 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.4,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3), // لون الظل مع شفافية
+            spreadRadius: 2, // مقدار انتشار الظل
+            blurRadius: 10, // مقدار التشويش للظل
+            offset: const Offset(2, 4), // إزاحة الظل (أفقياً وعمودياً)
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -30,11 +38,12 @@ class StatCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 5,),
-              Icon(Icons.trending_down, size: 24,
-                color: Colors.grey[700],),
-
-
+              const SizedBox(width: 5),
+              Icon(
+                Icons.trending_down,
+                size: 24,
+                color: Colors.grey[700],
+              ),
             ],
           ),
           const SizedBox(height: 8),

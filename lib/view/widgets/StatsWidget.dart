@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'StatCard.dart';
+import 'stat_card.dart';
 
 
 

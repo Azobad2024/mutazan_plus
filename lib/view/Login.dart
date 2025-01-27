@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mutazan_plus/view/widgets/LoginScreen.dart';
+import 'package:mutazan_plus/view/widgets/login_screen.dart';
 
 import '../constants.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 import 'CustomTextField.dart';
-import 'StatCard1.dart';
+import 'stat_card_circle.dart';
 
 class StatsRowWidget extends StatelessWidget {
   @override
@@ -12,6 +12,14 @@ class StatsRowWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: containerColor,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3), // لون الظل مع شفافية
+            spreadRadius: 4, // مقدار انتشار الظل
+            blurRadius: 12, // مقدار التشويش للظل
+            offset: const Offset(2, 4), // إزاحة الظل (أفقياً وعمودياً)
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

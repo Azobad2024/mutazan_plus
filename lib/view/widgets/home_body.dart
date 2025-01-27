@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'CompanyListWidget.dart';
-import 'HeaderRowWidget.dart';
+import 'company_list_widget.dart';
+import 'header_row_widget.dart';
 import 'StatsRowWidget.dart';
 
 class Homebody extends StatelessWidget {
@@ -19,6 +19,8 @@ class Homebody extends StatelessWidget {
               const SizedBox(height: 20),
               HeaderRowWidget(), // صف العناوين (الشركات - الحالة)
               const SizedBox(height: 10),
+              CompanyListWidget(), // قائمة الشركات
+              CompanyListWidget(), // قائمة الشركات
               CompanyListWidget(), // قائمة الشركات
             ],
           ),
