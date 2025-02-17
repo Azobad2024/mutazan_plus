@@ -1,43 +1,57 @@
+
 import 'package:flutter/material.dart';
 
 class StatCard1 extends StatelessWidget {
-  final IconData icon;
+  final String assetIcon;
   final String value;
   final Color color;
 
-  const StatCard1({required this.icon, required this.value, required this.color});
+  const StatCard1({
+    required this.assetIcon,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3), // لون الظل مع شفافية
-                    spreadRadius: 2, // مقدار انتشار الظل
-                    blurRadius: 4, // مقدار التشويش للظل
-                    offset: Offset(2, 4), // إزاحة الظل (أفقياً وعمودياً)
-                  ),
-                ],
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 2,
+                blurRadius: 16,
+                offset: const Offset(2, 8),
               ),
-              child: CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.grey[200],
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 80,
+                height: 80,
                 child: CircularProgressIndicator(
-                  value: 0.7, // النسبة المؤوية (تعديل القيمة حسب الحاجة)
+                  value: 0.7,
                   color: color,
                   strokeWidth: 4,
                 ),
               ),
-            ),
-            Icon(icon, size: 35, color: Colors.black),
-          ],
+              CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.grey[200],
+                child: Image.asset(
+                  assetIcon,
+                  width: 55,
+                  height: 55,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
         ),
         SizedBox(height: 8),
         Text(

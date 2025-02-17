@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mutazan_plus/view/Company.dart';
 import 'package:mutazan_plus/view/Home.dart';
+import 'package:mutazan_plus/view/Bills.dart';
 import 'package:mutazan_plus/view/Login.dart';
 
 void main() {
@@ -33,9 +35,10 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: LoginScreenWithWelcome(),
+      home:  InvoicesScreen(),//LoginScreenWithWelcome(),//Company(),
       routes: {
         "/Home": (context) => Home(),
+        "/Company": (context) => Company(),
 
       },
     );

@@ -42,7 +42,7 @@ class CompanyRowWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.4), // لون الظل مع شفافية
+              color: Colors.black.withOpacity(0.3), // لون الظل مع شفافية
               spreadRadius: 2,
               blurRadius: 8,
               offset: const Offset(2, 4),

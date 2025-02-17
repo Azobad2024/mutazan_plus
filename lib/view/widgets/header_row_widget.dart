@@ -12,7 +12,7 @@ class HeaderRowWidget extends StatelessWidget {
         color: containerColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3), // لون الظل مع شفافية
+            color: Colors.black.withOpacity(0.2), // لون الظل مع شفافية
             spreadRadius: 4,
             blurRadius: 12,
             offset: const Offset(2, 4),

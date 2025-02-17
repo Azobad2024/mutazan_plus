@@ -12,23 +12,29 @@ class StatsWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          StatCard(
+          // تمرير خصائص جديدة للتحكم في لون الأيقونة والاتجاه
+          const StatCard(
+            assetIcon: "assets/icons/arrow.png",
             title: 'الفواتير المعلقة',
             value: '400',
+            iconColor: Colors.green, // تحديد اللون
+            iconRotation: 80,
           ),
           Container(
             width: 2,
             height: 60,
             color: Colors.grey[300],
           ),
-          StatCard(
+          const StatCard(
+            iconRotation: 80,
+            assetIcon: "assets/icons/arrow.png",
             title: 'إجمالي الفواتير',
             value: '5000',
+            iconColor: Colors.blue, // تحديد اللون
           ),
         ],
       ),
     );
   }
 }
-
 

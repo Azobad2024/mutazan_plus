@@ -15,6 +15,7 @@ class Homebody extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              const SizedBox(height: 15,),
               StatsRowWidget(), // الصف العلوي للإحصائيات
               const SizedBox(height: 20),
               HeaderRowWidget(), // صف العناوين (الشركات - الحالة)

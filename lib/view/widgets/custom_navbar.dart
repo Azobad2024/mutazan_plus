@@ -15,15 +15,15 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(25),
-        topRight: Radius.circular(25),
+        topLeft: Radius.circular(40),
+        topRight: Radius.circular(40),
       ),
       child: Container(
         decoration: const BoxDecoration(
           color: backgroundColor, // لون الناف بار
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(40),
           ),
           boxShadow: [
             BoxShadow(
@@ -34,22 +34,21 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
             ),
           ],
         ),
-
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(Icons.home, "Home", 0),
-            _buildNavItem(Icons.business_rounded, "Company", 1),
-            _buildNavItem(Icons.person_outline, "Person", 2),
-            _buildNavItem(Icons.settings, "Setting", 3),
+            _buildNavItem('assets/icons/home-agreement.png', "Home", 0),
+            _buildNavItem('assets/icons/insurance-company.png', "Company", 1),
+            _buildNavItem('assets/icons/setting.png', "Setting", 2),
+            _buildNavItem('assets/icons/notification.png', "Notification", 3),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, int index) {
+  Widget _buildNavItem(String iconPath, String label, int index) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -65,7 +64,7 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
             Navigator.pushNamed(context, '/Company');
             break;
           case 2:
-            Navigator.pushNamed(context, '/profile');
+            Navigator.pushNamed(context, '/notification');
             break;
           case 3:
             Navigator.pushNamed(context, '/settings');
@@ -75,9 +74,10 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 30,
+          Image.asset(
+            iconPath,
+            height: 27,
+            width: 27,
             color: widget.selectedIndex == index ? Colors.white : Colors.white54,
           ),
           const SizedBox(height: 4),

@@ -23,7 +23,7 @@ class ContainerRadius extends StatelessWidget {
             spreadRadius: 3,
             blurRadius: 8,
             offset: const Offset(2, 4),
-            color: Colors.grey,
+            color: Colors.black38,
           ),
         ],
       ),

@@ -14,12 +14,17 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor, // اللون الأساسي للخلفية
+      appBar: AppBar(
+        backgroundColor: backgroundColor,
+        automaticallyImplyLeading: false, // إخفاء سهم العودة
+        title: HeaderWidget(), // إضافة HeaderWidget في العنوان
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            HeaderWidget(), // عنصر الرأس
+            // HeaderWidget(), // عنصر الرأس
             const SizedBox(height: 20),
             StatsWidget(), // عنصر الإحصائيات
             const SizedBox(height: 4,), // للحفاظ على توزيع المساحة

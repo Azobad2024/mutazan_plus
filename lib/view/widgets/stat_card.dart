@@ -5,8 +5,17 @@ import '../../constants.dart';
 class StatCard extends StatelessWidget {
   final String title;
   final String value;
+  final String assetIcon;
+  final Color iconColor; // إضافة خاصية جديدة للون الأيقونة
+  final double iconRotation; // إضافة خاصية جديدة للدوران
 
-  const StatCard({required this.title, required this.value});
+  const StatCard({
+    required this.title,
+    required this.value,
+    required this.assetIcon,
+    required this.iconColor, // تمرير اللون
+    required this.iconRotation, // تمرير اتجاه الأيقونة
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +27,10 @@ class StatCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3), // لون الظل مع شفافية
-            spreadRadius: 2, // مقدار انتشار الظل
-            blurRadius: 10, // مقدار التشويش للظل
-            offset: const Offset(2, 4), // إزاحة الظل (أفقياً وعمودياً)
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 10,
+            offset: const Offset(2, 4),
           ),
         ],
       ),
@@ -34,15 +43,20 @@ class StatCard extends StatelessWidget {
                 title,
                 style: const TextStyle(
                   fontSize: 16,
-                  color: buttomColor,
+                  color: backgroundColor, // اللون هنا يمكن تغييره حسب الحاجة
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(width: 5),
-              Icon(
-                Icons.trending_down,
-                size: 24,
-                color: Colors.grey[700],
+              // إضافة دوران وتحكم في اللون
+              Transform.rotate(
+                angle: iconRotation * 3.14159 / 180, // تحويل الدوران من درجات إلى راديان
+                child: Image.asset(
+                  assetIcon,
+                  width: 24,
+                  height: 24,
+                  color: iconColor, // التحكم في اللون
+                ),
               ),
             ],
           ),
@@ -52,7 +66,7 @@ class StatCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: buttomColor,
+              color: backgroundColor,
             ),
           ),
         ],

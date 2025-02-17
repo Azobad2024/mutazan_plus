@@ -14,25 +14,31 @@ class StatsRowWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3), // لون الظل مع شفافية
-            spreadRadius: 4, // مقدار انتشار الظل
-            blurRadius: 12, // مقدار التشويش للظل
-            offset: const Offset(2, 4), // إزاحة الظل (أفقياً وعمودياً)
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 4,
+            blurRadius: 12,
+            offset: const Offset(6, 4),
           ),
         ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          StatCard1(icon: Icons.directions_bus_outlined, value: "1500", color: Colors.red),
-
+          StatCard1(
+            assetIcon: 'assets/icons/shuttle-bus.png',
+            value: "1500",
+            color: Colors.red,
+          ),
           Container(
             width: 1,
             height: 60,
             color: backgroundColor,
           ),
-
-          StatCard1(icon: Icons.directions_bus_outlined, value: "5000", color: Colors.blue),
+          StatCard1(
+            assetIcon: 'assets/icons/shuttle-bus.png',
+            value: "5000",
+            color: Colors.blue,
+          ),
         ],
       ),
     );
