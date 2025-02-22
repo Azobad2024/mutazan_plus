@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
+import '../view/widgets/header_row_widget.dart';
 
 import '../constants.dart';
 
 class InvoicesScreen extends StatefulWidget {
+  final String companyName;
+  final String companyImag;
+
+  const InvoicesScreen({required this.companyName, required this.companyImag});
+
   @override
   _InvoicesScreenState createState() => _InvoicesScreenState();
 }
@@ -75,13 +82,13 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
           title: Row(
             children: [
               // أيقونة العودة في الجانب الأيسر
-              IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () {
-                  Navigator.pop(context); // الرجوع للخلف
-                },
-              ),
-              Text("  اسم الشركة ",style: TextStyle(color: Colors.white),),
+              // IconButton(
+              //   icon: Icon(Icons.arrow_back, color: Colors.white),
+              //   onPressed: () {
+              //     Navigator.pop(context); // الرجوع للخلف
+              //   },
+              // ),
+              Text(" ${widget.companyName}",style: TextStyle(color: Colors.white),),
               Spacer(), // يضيف فراغ بين البحث وأيقونة العودة
 
               // البحث في الجانب الأيمن
@@ -167,11 +174,11 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                       ],
                     ),
                     Container(
-                      width: 80,
+                      width: 60, // جعل العرض والطول متساويين لإنشاء دائرة
                       height: 60,
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(20),
+                        shape: BoxShape.circle, // تحويل الحاوية إلى دائرة
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black26,
@@ -180,12 +187,16 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                           )
                         ],
                       ),
-                      child: Center(
-                        child: Text("شعار",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
+                      child: ClipOval( // قص المحتوى داخل الدائرة
+                        child: Image.asset(
+                          widget.companyImag,
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover, // لضمان تغطية الصورة بالكامل داخل الدائرة
+                        ),
                       ),
                     ),
+
                   ],
                 ),
               ),
@@ -208,9 +219,11 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                   },
                 ),
               ),
+              NavigationBarItems(selectedIndex: 5),
             ],
           ),
         ),
+        // bottomNavigationBar: NavigationBarItems(selectedIndex: 5),
       ),
     );
   }

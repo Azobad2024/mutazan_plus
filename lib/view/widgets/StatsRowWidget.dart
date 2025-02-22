@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
-import 'CustomTextField.dart';
 import 'stat_card_circle.dart';
 
 class StatsRowWidget extends StatelessWidget {

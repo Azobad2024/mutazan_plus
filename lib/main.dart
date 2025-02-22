@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         );
       },
 
-      home:  InvoicesScreen(),//LoginScreenWithWelcome(),//Company(),
+      home: LoginScreenWithWelcome(),//Company(), InvoicesScreen(),
       routes: {
         "/Home": (context) => Home(),
         "/Company": (context) => Company(),

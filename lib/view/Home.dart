@@ -23,34 +23,32 @@ class Home extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             // HeaderWidget(), // عنصر الرأس
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             StatsWidget(), // عنصر الإحصائيات
-            const SizedBox(height: 4,), // للحفاظ على توزيع المساحة
+            // const SizedBox(height: 2,), // للحفاظ على توزيع المساحة
             FooterWidget(), // عنصر التذييل
-            const SizedBox(height: 20),
+            const SizedBox(height: 2),
             // محتويات ContainerRadius
             Expanded(
               child: ContainerRadius(
-                child: SingleChildScrollView(
-                  child: Homebody(), // المحتوى المتحرك داخل ContainerRadius
-                ),
+                child: Homebody(),
               ),
             ),
           ],
         ),
       ),
       // الخلفية البيضاء للجزء السفلي
-      bottomNavigationBar: Stack(
-        children: [
-          Container(
-            height: 60, // ارتفاع الجزء الأبيض
-            color: Colors.white, // لون الخلفية السفلية
-          ),
-          NavigationBarItems(selectedIndex: 0),
-        ],
-      ),
+      // bottomNavigationBar: Stack(
+      //   children: [
+      //     Container(
+      //       height: 60, // ارتفاع الجزء الأبيض
+      //       color: Colors.white, // لون الخلفية السفلية
+      //     ),
+      //     NavigationBarItems(selectedIndex: 0),
+      //   ],
+      // ),
     );
   }
 }
