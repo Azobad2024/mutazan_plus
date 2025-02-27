@@ -4,6 +4,9 @@ import 'package:mutazan_plus/view/Company.dart';
 import 'package:mutazan_plus/view/Home.dart';
 import 'package:mutazan_plus/view/Bills.dart';
 import 'package:mutazan_plus/view/Login.dart';
+import 'package:mutazan_plus/view/profile_page.dart';
+
+import 'controler/Router.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,12 +39,15 @@ class MyApp extends StatelessWidget {
         );
       },
 
-      home: LoginScreenWithWelcome(),//Company(), InvoicesScreen(),
-      routes: {
-        "/Home": (context) => Home(),
-        "/Company": (context) => Company(),
-
-      },
+      // home: LoginScreenWithWelcome(),//Company(), InvoicesScreen(),ProfilePage1(),
+      // routes: {
+      //   "/Home": (context) => Home(),
+      //   "/Company": (context) => Company(),
+      //   "/Profile": (context) => ProfilePage1(),
+      //
+      // },
+      initialRoute: Home.routeName, // تأكد من أن `Home.routeName` معرف
+      routes: routers, // استخدام `routers` من ملف المسارات
     );
   }
 }

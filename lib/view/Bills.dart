@@ -34,7 +34,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
       'quantity': '1500',
       'material': 'سكر',
       'netWeight': '5000',
-      'isVerified': false,
+      'isVerified': true,
     },
     {
       'invoiceNumber': '35442',
@@ -158,7 +158,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                       children: [
                         Text("عدد الفواتير",
                             style: TextStyle(fontSize: 16, color: Colors.black)),
-                        Text("$totalInvoices",
+                        Text("${invoices.length}",
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold)),
                       ],
@@ -219,7 +219,7 @@ class _InvoicesScreenState extends State<InvoicesScreen> {
                   },
                 ),
               ),
-              NavigationBarItems(selectedIndex: 5),
+              NavigationBarItems(selectedIndex: 5, showBarcode: true,),
             ],
           ),
         ),
