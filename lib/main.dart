@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       //   "/Profile": (context) => ProfilePage1(),
       //
       // },
-      initialRoute: Home.routeName, // تأكد من أن `Home.routeName` معرف
+      initialRoute: LoginScreenWithWelcome.routeName, // تأكد من أن `Home.routeName` معرف
       routes: routers, // استخدام `routers` من ملف المسارات
     );
   }

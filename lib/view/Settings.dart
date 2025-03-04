@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mutazan_plus/view/widgets/login_screen_body.dart';
+
+import 'Login.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -45,6 +48,24 @@ class _SettingsState extends State<Settings> {
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 // إضافة وظيفة إعدادات الإشعارات
+              },
+            ),
+          ),
+          const SizedBox(height: 20), // مسافة قبل زر تسجيل الخروج
+          Card(
+            color: Colors.redAccent, // لون مميز لتسجيل الخروج
+            child: ListTile(
+              leading: const Icon(Icons.logout, color: Colors.white),
+              title: const Text(
+                'تسجيل الخروج',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                // توجيه المستخدم إلى شاشة تسجيل الدخول وإزالة صفحة الإعدادات من المكدس
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreenWithWelcome()),
+                );
               },
             ),
           ),

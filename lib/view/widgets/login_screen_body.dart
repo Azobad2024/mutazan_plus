@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-
+import '../../Util/BiometricAuthPresenter.dart';
+import '../../Util/BiometricAuthService.dart';
 import '../Home.dart';
 import 'custom_elevated_button.dart';
+
+// استيراد الأكواد الخاصة بالمصادقة البيومترية
+import 'package:local_auth/local_auth.dart';
+import '../../Util/BiometricAuthInterface.dart';
+
 
 class LoginScreenWidget extends StatefulWidget {
   const LoginScreenWidget({super.key});
@@ -12,11 +18,25 @@ class LoginScreenWidget extends StatefulWidget {
 
 class _LoginScreenWidgetState extends State<LoginScreenWidget> {
   final GlobalKey<FormState> _formkey = GlobalKey();
-
   final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-
   bool _obscurePassword = true;
+
+  // إنشاء كائن المصادقة البيومترية
+  final BiometricAuthPresenter _biometricAuthPresenter =
+  BiometricAuthPresenter(BiometricAuthService());
+
+  // دالة تنفيذ المصادقة البيومترية
+  Future<void> _authenticateWithBiometrics() async {
+    bool isAuthenticated = await _biometricAuthPresenter.authenticate();
+    if (isAuthenticated) {
+      Navigator.pushNamed(context, Home.routeName);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("فشلت المصادقة البيومترية")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +44,12 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
       key: _formkey,
       child: Container(
         padding: EdgeInsets.all(16),
-      child: Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 80,),
-           const Align(
-              alignment: Alignment.centerRight, // محاذاة النص لليمين
+            const SizedBox(height: 80),
+            const Align(
+              alignment: Alignment.centerRight,
               child: Text(
                 '           اسم المستخدم أو البريد الإلكتروني',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -37,9 +57,9 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
             ),
             Row(
               children: [
-                Icon(Icons.email_outlined, size: 30), // أيقونة بجانب الحقل
-                const SizedBox(width: 4), // مسافة صغيرة بين الأيقونة والحقل
-                Expanded( // لجعل الحقل يأخذ المساحة المتبقية
+                Icon(Icons.email_outlined, size: 30),
+                const SizedBox(width: 4),
+                Expanded(
                   child: TextFormField(
                     controller: _controllerUsername,
                     keyboardType: TextInputType.emailAddress,
@@ -62,11 +82,9 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                 ),
               ],
             ),
-            const SizedBox(height: 30), // مسافة بين البريد وكلمة المرور
-
-            // كلمة المرور
+            const SizedBox(height: 30),
             const Align(
-              alignment: Alignment.centerRight, // محاذاة النص لليمين
+              alignment: Alignment.centerRight,
               child: Text(
                 "           كلمة المرور",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -102,33 +120,27 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                 ),
               ],
             ),
-
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.center,
               child: TextButton(
                 onPressed: () {},
-                child: Text('هل نسيت كلمة السر؟'),),
+                child: Text('هل نسيت كلمة السر؟'),
               ),
-
+            ),
             const SizedBox(height: 16),
             CustomElevatedButton(
               text: 'تسجيل الدخول',
               onPressed: () {
-                if (true)
-                  //_formkey.currentState?.validate() ?? false){
-                    {
-                  // Navigator.push(
-                  // context, MaterialPageRoute(builder: (context)=>Home()));
+                if (_formkey.currentState?.validate() ?? false) {
                   Navigator.pushNamed(context, Home.routeName);
                 }
               },
             ),
-
             const SizedBox(height: 16),
             Center(
               child: TextButton.icon(
-                onPressed: () {},
+                onPressed: _authenticateWithBiometrics, // استدعاء المصادقة عند الضغط
                 label: Text('استخدم بصمة الإصبع للوصول'),
                 icon: Icon(Icons.fingerprint),
               ),

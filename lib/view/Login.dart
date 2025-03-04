@@ -4,6 +4,8 @@ import 'package:mutazan_plus/view/widgets/login_screen.dart';
 import '../constants.dart';
 
 class LoginScreenWithWelcome extends StatefulWidget {
+  static String routeName = "/Login";
+
   @override
   _LoginScreenWithWelcomeState createState() => _LoginScreenWithWelcomeState();
 }
