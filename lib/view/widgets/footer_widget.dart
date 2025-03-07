@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-
 class FooterWidget extends StatelessWidget {
+  const FooterWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return  const Padding(
+    return const Padding(
       padding: EdgeInsets.symmetric(vertical: 15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

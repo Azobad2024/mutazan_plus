@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class ProfilePage1 extends StatefulWidget {
-  const ProfilePage1({Key? key}) : super(key: key);
+  const ProfilePage1({super.key});
   static String routeName = "/ProfilePage1";
 
   @override
@@ -18,7 +18,6 @@ class _ProfilePage1State extends State<ProfilePage1> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: backgroundColorAppBar,
-
       ),
       body: SafeArea(
         child: Column(
@@ -46,7 +45,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
 }
 
 class _TopPortion extends StatelessWidget {
-  const _TopPortion({Key? key}) : super(key: key);
+  const _TopPortion({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +63,14 @@ class _TopPortion extends StatelessWidget {
                 bottomRight: Radius.circular(50),
               )),
         ),
-        Positioned(
+        const Positioned(
           bottom: 0,
           left: 0,
           right: 0,
           child: Center(
             child: CircleAvatar(
               radius: 75,
-              backgroundImage: const AssetImage('assets/images/myProfile.png'),
+              backgroundImage: AssetImage('assets/images/myProfile.png'),
             ),
           ),
         ),
@@ -81,7 +80,7 @@ class _TopPortion extends StatelessWidget {
 }
 
 class _UserInfoCard extends StatelessWidget {
-  const _UserInfoCard({Key? key}) : super(key: key);
+  const _UserInfoCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,17 +88,25 @@ class _UserInfoCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          children: const [
-            _UserInfoRow(icon: Icons.person, label: "اسم المستخدم", value: "abdelazeez"),
+          children: [
+            _UserInfoRow(
+                icon: Icons.person, label: "اسم المستخدم", value: "abdelazeez"),
             Divider(),
-            _UserInfoRow(icon: Icons.phone, label: "رقم الهاتف", value: "770571954"),
+            _UserInfoRow(
+                icon: Icons.phone, label: "رقم الهاتف", value: "770571954"),
             Divider(),
-            _UserInfoRow(icon: Icons.location_on, label: "العنوان", value: "صنعاء، اليمن"),
+            _UserInfoRow(
+                icon: Icons.location_on,
+                label: "العنوان",
+                value: "صنعاء، اليمن"),
             Divider(),
-            _UserInfoRow(icon: Icons.email, label: "البريد الإلكتروني", value: "abdelazeez@example.com"),
+            _UserInfoRow(
+                icon: Icons.email,
+                label: "البريد الإلكتروني",
+                value: "abdelazeez@example.com"),
           ],
         ),
       ),
@@ -112,7 +119,11 @@ class _UserInfoRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const _UserInfoRow({Key? key, required this.icon, required this.label, required this.value}) : super(key: key);
+  const _UserInfoRow(
+      {super.key,
+      required this.icon,
+      required this.label,
+      required this.value});
 
   @override
   Widget build(BuildContext context) {

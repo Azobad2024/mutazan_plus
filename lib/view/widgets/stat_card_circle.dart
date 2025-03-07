@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class StatCard1 extends StatelessWidget {
@@ -7,6 +6,7 @@ class StatCard1 extends StatelessWidget {
   final Color color;
 
   const StatCard1({
+    super.key,
     required this.assetIcon,
     required this.value,
     required this.color,
@@ -53,10 +53,10 @@ class StatCard1 extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           value,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ],
     );

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
-
 class HeaderRowWidget extends StatelessWidget {
+  const HeaderRowWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +20,7 @@ class HeaderRowWidget extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -39,7 +40,7 @@ class HeaderRowWidget extends StatelessWidget {
 class HeaderCard extends StatelessWidget {
   final String title;
 
-  const HeaderCard({required this.title});
+  const HeaderCard({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,8 @@ class HeaderCard extends StatelessWidget {
       ),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+        style: const TextStyle(
+            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
       ),
     );
   }

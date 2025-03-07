@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class InvoicesScreen extends StatelessWidget {
   final String companyName;
 
-  const InvoicesScreen({required this.companyName});
+  const InvoicesScreen({super.key, required this.companyName});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class InvoicesScreen extends StatelessWidget {
       body: Center(
         child: Text(
           "هذه الفواتير الخاصة بـ $companyName",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
     );

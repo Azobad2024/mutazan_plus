@@ -10,6 +10,8 @@ import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
 class Home extends StatelessWidget {
   static String routeName = "/Home";
 
+  const Home({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +33,7 @@ class Home extends StatelessWidget {
             FooterWidget(), // عنصر التذييل
             const SizedBox(height: 2),
             // محتويات ContainerRadius
-            Expanded(
+            const Expanded(
               child: ContainerRadius(
                 child: Homebody(),
               ),

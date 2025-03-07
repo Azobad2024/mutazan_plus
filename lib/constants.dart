@@ -1,8 +1,6 @@
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
-class AppConstant{
-
+class AppConstant {
   static Color? primaryBackgroundColor = Colors.grey[200];
 }
 

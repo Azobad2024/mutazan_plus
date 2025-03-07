@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../profile_page.dart';
 
 class HeaderWidget extends StatelessWidget {
+  const HeaderWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,9 +16,9 @@ class HeaderWidget extends StatelessWidget {
             onTap: () {
               Navigator.pushNamed(context, ProfilePage1.routeName);
             },
-            child: CircleAvatar(
+            child: const CircleAvatar(
               radius: 24,
-              backgroundImage: const AssetImage('assets/images/myProfile.png'),
+              backgroundImage: AssetImage('assets/images/myProfile.png'),
             ),
           ),
         ],

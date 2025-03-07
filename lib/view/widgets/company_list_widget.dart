@@ -3,6 +3,8 @@ import '../../constants.dart';
 import '../Bills.dart';
 
 class CompanyListWidget extends StatelessWidget {
+  const CompanyListWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,6 +27,7 @@ class CompanyRowWidget extends StatelessWidget {
   final String imagePath;
 
   const CompanyRowWidget({
+    super.key,
     required this.name,
     required this.status,
     required this.statusColor,
@@ -39,14 +42,17 @@ class CompanyRowWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => InvoicesScreen(companyName: name, companyImag: imagePath,),
+            builder: (context) => InvoicesScreen(
+              companyName: name,
+              companyImag: imagePath,
+            ),
           ),
         );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             color: containerColor,
             borderRadius: BorderRadius.circular(14),
@@ -71,15 +77,20 @@ class CompanyRowWidget extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 12,),
+              const SizedBox(
+                width: 12,
+              ),
               Expanded(
                 child: Text(
                   name,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.right,
                 ),
               ),
-              const SizedBox(width: 12,),
+              const SizedBox(
+                width: 12,
+              ),
               Icon(status, color: statusColor, size: 24),
             ],
           ),

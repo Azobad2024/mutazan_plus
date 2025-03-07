@@ -14,15 +14,15 @@ class ContainerRadius extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.only(
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(60),
           topRight: Radius.circular(60),
         ),
-        boxShadow: const [
-          BoxShadow(
+        boxShadow: [
+          const BoxShadow(
             spreadRadius: 3,
             blurRadius: 8,
-            offset: const Offset(2, 4),
+            offset: Offset(2, 4),
             color: Colors.black38,
           ),
         ],

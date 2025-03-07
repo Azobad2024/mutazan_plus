@@ -6,6 +6,8 @@ import '../constants.dart';
 class LoginScreenWithWelcome extends StatefulWidget {
   static String routeName = "/Login";
 
+  const LoginScreenWithWelcome({super.key});
+
   @override
   _LoginScreenWithWelcomeState createState() => _LoginScreenWithWelcomeState();
 }
@@ -18,7 +20,7 @@ class _LoginScreenWithWelcomeState extends State<LoginScreenWithWelcome> {
     super.initState();
 
     // تأخير الحركة لمدة 2 ثانية
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _showLoginScreen = true;
       });
@@ -35,7 +37,7 @@ class _LoginScreenWithWelcomeState extends State<LoginScreenWithWelcome> {
         children: [
           // النص "مرحباً بكم"
           AnimatedPositioned(
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             curve: Curves.easeInOut,
             top: _showLoginScreen
                 ? 80
@@ -56,7 +58,7 @@ class _LoginScreenWithWelcomeState extends State<LoginScreenWithWelcome> {
           // نافذة تسجيل الدخول
           if (_showLoginScreen)
             AnimatedPositioned(
-              duration: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
               curve: Curves.easeInOut,
               bottom: 0,
               left: 0,

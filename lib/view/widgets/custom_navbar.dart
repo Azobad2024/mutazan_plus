@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../constants.dart';
 
 class NavigationBarItems extends StatefulWidget {
   final int selectedIndex;
   final bool showBarcode;
 
-  NavigationBarItems({
-    Key? key,
+  const NavigationBarItems({
+    super.key,
     required this.selectedIndex,
     this.showBarcode = false,
-  }) : super(key: key);
+  });
 
   @override
   State<NavigationBarItems> createState() => _NavigationBarItemsState();
@@ -31,23 +32,15 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
                 topLeft: Radius.circular(40),
                 topRight: Radius.circular(40),
               ),
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.grey,
-              //     blurRadius: 15,
-              //     spreadRadius: 5,
-              //     offset: Offset(0, -4),
-              //   ),
-              // ],
             ),
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem('assets/icons/home-agreement.png', "  Home  ", 0),
-                _buildNavItem('assets/icons/insurance-company.png', "Company", 1),
-                _buildNavItem('assets/icons/setting.png', "Setting", 2),
-                _buildNavItem('assets/icons/notification.png', "Notification", 3),
+                _buildNavItem('assets/icons/home-agreement.png', "home".tr, 0),
+                _buildNavItem('assets/icons/insurance-company.png', "company".tr, 1),
+                _buildNavItem('assets/icons/setting.png', "settings".tr, 2),
+                _buildNavItem('assets/icons/notification.png', "notifications".tr, 3),
               ],
             ),
           ),
@@ -67,7 +60,7 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
                     color: Colors.white, // لون الفاصل الأبيض
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 8,
@@ -85,7 +78,8 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
                       border: Border.all(color: Colors.blueGrey, width: 3),
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.qr_code, size: 35, color: Colors.blueGrey),
+                      icon: const Icon(Icons.qr_code,
+                          size: 35, color: Colors.blueGrey),
                       onPressed: () {
                         // كود فتح الكاميرا أو صفحة الباركود
                       },
@@ -103,20 +97,7 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
     bool isSelected = widget.selectedIndex == index;
     return InkWell(
       onTap: () {
-        switch (index) {
-          case 0:
-            Navigator.pushNamed(context, '/Home');
-            break;
-          case 1:
-            Navigator.pushNamed(context, '/company');
-            break;
-          case 2:
-            Navigator.pushNamed(context, '/settings');
-            break;
-          case 3:
-            Navigator.pushNamed(context, '/notifications');
-            break;
-        }
+        Get.toNamed(_getRoute(index)); // استخدام GetX للتنقل
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -127,11 +108,13 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
             height: 24,
             color: isSelected ? Colors.blue : Colors.grey,
           ),
+          const SizedBox(height: 4), // مسافة بين الأيقونة والنص
           Text(
             label,
             style: TextStyle(
               color: isSelected ? Colors.blue : Colors.grey,
               fontSize: 12,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
         ],
@@ -148,7 +131,7 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
       case 2:
         return '/settings';
       case 3:
-        return '/notification';
+        return '/notifications';
       default:
         return '/Home';
     }

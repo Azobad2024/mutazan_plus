@@ -10,6 +10,7 @@ class StatCard extends StatelessWidget {
   final double iconRotation; // إضافة خاصية جديدة للدوران
 
   const StatCard({
+    super.key,
     required this.title,
     required this.value,
     required this.assetIcon,
@@ -50,7 +51,9 @@ class StatCard extends StatelessWidget {
               const SizedBox(width: 5),
               // إضافة دوران وتحكم في اللون
               Transform.rotate(
-                angle: iconRotation * 3.14159 / 180, // تحويل الدوران من درجات إلى راديان
+                angle: iconRotation *
+                    3.14159 /
+                    180, // تحويل الدوران من درجات إلى راديان
                 child: Image.asset(
                   assetIcon,
                   width: 24,

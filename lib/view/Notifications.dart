@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Notifications extends StatefulWidget {
   static const String routeName = '/notifications';
 
-  const Notifications({Key? key}) : super(key: key);
+  const Notifications({super.key});
 
   @override
   State<Notifications> createState() => _NotificationsState();
@@ -102,8 +102,9 @@ class _NotificationsState extends State<Notifications> {
                       title: Text(
                         notification.title,
                         style: TextStyle(
-                          fontWeight:
-                              notification.isRead ? FontWeight.normal : FontWeight.bold,
+                          fontWeight: notification.isRead
+                              ? FontWeight.normal
+                              : FontWeight.bold,
                         ),
                       ),
                       subtitle: Column(

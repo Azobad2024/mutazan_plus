@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:mutazan_plus/view/widgets/login_screen_body.dart';
-
+import 'package:get/get.dart';
+import '../controler/language_controller.dart';
 import 'Login.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  const Settings({super.key});
 
   @override
   State<Settings> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {
+  final LanguageController languageController = Get.put(LanguageController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('الإعدادات'),
+        title: Text('settings'.tr), // استخدام الترجمة
         centerTitle: true,
       ),
       body: ListView(
@@ -24,17 +26,31 @@ class _SettingsState extends State<Settings> {
           Card(
             child: ListTile(
               leading: const Icon(Icons.language),
-              title: const Text('اللغة'),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // إضافة وظيفة تغيير اللغة
-              },
+              title: Text('language'.tr), // استخدام الترجمة
+              trailing: Obx(() => DropdownButton<bool>(
+                value: languageController.isArabic.value,
+                items: [
+                  DropdownMenuItem(
+                    value: true,
+                    child: Text('العربية'),
+                  ),
+                  DropdownMenuItem(
+                    value: false,
+                    child: Text('English'),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    languageController.changeLanguage(value);
+                  }
+                },
+              )),
             ),
           ),
           Card(
             child: ListTile(
               leading: const Icon(Icons.dark_mode),
-              title: const Text('المظهر'),
+              title: Text('theme'.tr), // استخدام الترجمة
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 // إضافة وظيفة تغيير المظهر
@@ -44,7 +60,7 @@ class _SettingsState extends State<Settings> {
           Card(
             child: ListTile(
               leading: const Icon(Icons.notifications),
-              title: const Text('الإشعارات'),
+              title: Text('notifications'.tr), // استخدام الترجمة
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 // إضافة وظيفة إعدادات الإشعارات
@@ -56,15 +72,17 @@ class _SettingsState extends State<Settings> {
             color: Colors.redAccent, // لون مميز لتسجيل الخروج
             child: ListTile(
               leading: const Icon(Icons.logout, color: Colors.white),
-              title: const Text(
-                'تسجيل الخروج',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              title: Text(
+                'logout'.tr, // استخدام الترجمة
+                style:
+                TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               onTap: () {
                 // توجيه المستخدم إلى شاشة تسجيل الدخول وإزالة صفحة الإعدادات من المكدس
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreenWithWelcome()),
+                  MaterialPageRoute(
+                      builder: (context) => LoginScreenWithWelcome()),
                 );
               },
             ),

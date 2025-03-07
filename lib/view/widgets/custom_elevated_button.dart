@@ -7,10 +7,10 @@ class CustomElevatedButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const CustomElevatedButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class CustomElevatedButton extends StatelessWidget {
             color: Colors.black.withOpacity(0.2), // لون الظل مع شفافية
             blurRadius: 6, // مقدار التشويش للظل
             spreadRadius: 2, // مقدار انتشار الظل
-            offset: Offset(2, 4), // الإزاحة (أفقي، عمودي)
+            offset: const Offset(2, 4), // الإزاحة (أفقي، عمودي)
           ),
         ],
       ),
@@ -29,14 +29,14 @@ class CustomElevatedButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10), // تحديد نصف القطر للحواف
           ),
         ),
         child: Text(
           text,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

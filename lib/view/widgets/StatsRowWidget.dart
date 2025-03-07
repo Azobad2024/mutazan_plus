@@ -4,10 +4,12 @@ import '../../constants.dart';
 import 'stat_card_circle.dart';
 
 class StatsRowWidget extends StatelessWidget {
+  const StatsRowWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: containerColor,
         borderRadius: BorderRadius.circular(12),
@@ -23,7 +25,7 @@ class StatsRowWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          StatCard1(
+          const StatCard1(
             assetIcon: 'assets/icons/shuttle-bus.png',
             value: "1500",
             color: Colors.red,
@@ -33,7 +35,7 @@ class StatsRowWidget extends StatelessWidget {
             height: 60,
             color: backgroundColor,
           ),
-          StatCard1(
+          const StatCard1(
             assetIcon: 'assets/icons/shuttle-bus.png',
             value: "5000",
             color: Colors.blue,
