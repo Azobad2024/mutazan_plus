@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../constants.dart';
 
 class ProfilePage1 extends StatefulWidget {
@@ -93,19 +94,19 @@ class _UserInfoCard extends StatelessWidget {
         child: Column(
           children: [
             _UserInfoRow(
-                icon: Icons.person, label: "اسم المستخدم", value: "abdelazeez"),
+                icon: Icons.person, label: "username", value: "abdelazeez"),
             Divider(),
             _UserInfoRow(
-                icon: Icons.phone, label: "رقم الهاتف", value: "770571954"),
+                icon: Icons.phone, label: "phoneNumber", value: "770571954"),
             Divider(),
             _UserInfoRow(
                 icon: Icons.location_on,
-                label: "العنوان",
-                value: "صنعاء، اليمن"),
+                label: "address",
+                value: "sanaaYemen"),
             Divider(),
             _UserInfoRow(
                 icon: Icons.email,
-                label: "البريد الإلكتروني",
+                label: "email",
                 value: "abdelazeez@example.com"),
           ],
         ),
@@ -121,9 +122,9 @@ class _UserInfoRow extends StatelessWidget {
 
   const _UserInfoRow(
       {super.key,
-      required this.icon,
-      required this.label,
-      required this.value});
+        required this.icon,
+        required this.label,
+        required this.value});
 
   @override
   Widget build(BuildContext context) {

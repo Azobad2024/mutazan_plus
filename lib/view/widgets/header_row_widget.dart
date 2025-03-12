@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../../constants.dart';
 
 class HeaderRowWidget extends StatelessWidget {
@@ -24,13 +24,13 @@ class HeaderRowWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const HeaderCard(title: "الشركات"),
+          HeaderCard(title: "companies".tr), // استخدام الترجمة
           Container(
             width: 1,
             height: 40,
             color: backgroundColor,
           ),
-          const HeaderCard(title: "  الحالة   "),
+          HeaderCard(title: "status".tr), // استخدام الترجمة
         ],
       ),
     );

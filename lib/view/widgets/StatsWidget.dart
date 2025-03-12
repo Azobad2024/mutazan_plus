@@ -23,15 +23,15 @@ class StatsWidget extends StatelessWidget {
               // الانتقال إلى صفحة الفواتير المعلقة
               Get.to(
                     () => FilteredInvoicesScreen(
-                  companyName: "اسم الشركة", // يمكنك تمرير القيمة الفعلية
-                  companyImag: "صورة الشركة", // يمكنك تمرير القيمة الفعلية
+                  companyName: "companyName".tr, // استخدام الترجمة
+                  companyImag: "companyImage".tr, // استخدام الترجمة
                   showPending: true, // عرض الفواتير المعلقة
                 ),
               );
             },
             child: StatCard(
               assetIcon: "assets/icons/arrow.png",
-              title: 'الفواتير المعلقة',
+              title: 'pendingInvoices'.tr, // استخدام الترجمة
               value: '${controller.pendingInvoices}',
               iconColor: Colors.green, // تحديد اللون
               iconRotation: 80,
@@ -48,8 +48,8 @@ class StatsWidget extends StatelessWidget {
               // الانتقال إلى صفحة إجمالي الفواتير
               Get.to(
                     () => FilteredInvoicesScreen(
-                  companyName: "اسم الشركة", // يمكنك تمرير القيمة الفعلية
-                  companyImag: "صورة الشركة", // يمكنك تمرير القيمة الفعلية
+                  companyName: "companyName".tr, // استخدام الترجمة
+                  companyImag: "companyImage".tr, // استخدام الترجمة
                   showPending: false, // عرض جميع الفواتير
                 ),
               );
@@ -57,7 +57,7 @@ class StatsWidget extends StatelessWidget {
             child: StatCard(
               iconRotation: 80,
               assetIcon: "assets/icons/arrow.png",
-              title: 'إجمالي الفواتير',
+              title: 'totalInvoices'.tr, // استخدام الترجمة
               value: '${controller.totalInvoices}',
               iconColor: Colors.blue, // تحديد اللون
             ),

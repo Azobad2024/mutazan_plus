@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../constants.dart';
 import '../Bills.dart';
 
@@ -10,7 +11,7 @@ class CompanyListWidget extends StatelessWidget {
     return Column(
       children: List.generate(18, (index) {
         return CompanyRowWidget(
-          name: "اسم الشركة $index",
+          name: "companyName".tr + " $index", // استخدام الترجمة
           status: index % 2 == 0 ? Icons.check_circle : Icons.cancel,
           statusColor: index % 2 == 0 ? Colors.green : Colors.red,
           imagePath: 'assets/images/images.png',

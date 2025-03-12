@@ -44,7 +44,7 @@ class FilteredInvoicesScreen extends StatelessWidget {
           title: Row(
             children: [
               Text(
-                showPending ? "الفواتير المعلقة" : "إجمالي الفواتير", // العنوان بناءً على المعلمة
+                showPending ? "pendingInvoices".tr : "totalInvoices".tr, // العنوان بناءً على المعلمة
                 style: const TextStyle(color: Colors.white),
               ),
               const Spacer(),
@@ -62,10 +62,12 @@ class FilteredInvoicesScreen extends StatelessWidget {
                       controller: controller.searchController,
                       focusNode: controller.searchFocusNode, // FocusNode
                       autofocus: false, // لا تظهر الكيبورد تلقائيًا
-                      decoration: const InputDecoration(
-                        hintText: 'أدخل نص البحث...',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: InputDecoration(
+                        hintText: 'searchHint'.tr,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                       ),
                       onChanged: (query) {
                         controller.searchInvoices(query); // البحث عند تغيير النص
@@ -77,11 +79,11 @@ class FilteredInvoicesScreen extends StatelessWidget {
                     onTap: () {
                       controller.isSearching.value = true;
                     },
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Text('بحث', style: TextStyle(color: Colors.white)),
-                        SizedBox(width: 5),
-                        Icon(Icons.search, color: Colors.white),
+                        Text('search'.tr, style: const TextStyle(color: Colors.white)),
+                        const SizedBox(width: 5),
+                        const Icon(Icons.search, color: Colors.white),
                       ],
                     ),
                   );
@@ -118,9 +120,8 @@ class FilteredInvoicesScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text("عدد الفواتير",
-                            style:
-                            TextStyle(fontSize: 16, color: Colors.black)),
+                        Text("numberOfInvoices".tr,
+                            style: const TextStyle(fontSize: 16, color: Colors.black)),
                         Obx(() => Text("${controller.filteredInvoices.length}",
                             style: const TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold))),
@@ -148,7 +149,7 @@ class FilteredInvoicesScreen extends StatelessWidget {
                   },
                 )),
               ),
-              NavigationBarItems(
+              const NavigationBarItems(
                 selectedIndex: 5,
                 showBarcode: true,
               ),

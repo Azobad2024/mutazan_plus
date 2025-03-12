@@ -21,19 +21,19 @@ class Home extends StatelessWidget {
         automaticallyImplyLeading: false, // إخفاء سهم العودة
         title: HeaderWidget(), // إضافة HeaderWidget في العنوان
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             // HeaderWidget(), // عنصر الرأس
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             StatsWidget(), // عنصر الإحصائيات
             // const SizedBox(height: 2,), // للحفاظ على توزيع المساحة
             FooterWidget(), // عنصر التذييل
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             // محتويات ContainerRadius
-            const Expanded(
+            Expanded(
               child: ContainerRadius(
                 child: Homebody(),
               ),

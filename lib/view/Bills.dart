@@ -37,7 +37,7 @@ class InvoicesScreen extends StatelessWidget {
           title: Row(
             children: [
               Text(
-                " ${companyName}",
+                companyName,
                 style: const TextStyle(color: Colors.white),
               ),
               const Spacer(),
@@ -55,8 +55,8 @@ class InvoicesScreen extends StatelessWidget {
                       controller: controller.searchController,
                       focusNode: controller.searchFocusNode, // FocusNode
                       autofocus: false, // لا تظهر الكيبورد تلقائيًا
-                      decoration: const InputDecoration(
-                        hintText: 'أدخل نص البحث...',
+                      decoration: InputDecoration(
+                        hintText: 'searchHint'.tr,
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                       ),
@@ -70,11 +70,11 @@ class InvoicesScreen extends StatelessWidget {
                     onTap: () {
                       controller.isSearching.value = true;
                     },
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Text('بحث', style: TextStyle(color: Colors.white)),
-                        SizedBox(width: 5),
-                        Icon(Icons.search, color: Colors.white),
+                        Text('search'.tr, style: TextStyle(color: Colors.white)),
+                        const SizedBox(width: 5),
+                        const Icon(Icons.search, color: Colors.white),
                       ],
                     ),
                   );
@@ -111,9 +111,8 @@ class InvoicesScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text("عدد الفواتير",
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.black)),
+                        Text("numberOfInvoices".tr,
+                            style: TextStyle(fontSize: 16, color: Colors.black)),
                         Obx(() => Text("${controller.invoices.length}",
                             style: const TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold))),
@@ -122,9 +121,8 @@ class InvoicesScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text("عدد الشاحنات",
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.black)),
+                        Text("numberOfTrucks".tr,
+                            style: TextStyle(fontSize: 16, color: Colors.black)),
                         Text("200", // يمكنك جعل هذا متغيرًا تفاعليًا أيضًا
                             style: const TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold)),
@@ -252,16 +250,16 @@ class InvoiceCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: InvoiceLabel(
-                          title: "رقم الفاتورة", value: invoiceNumber),
+                          title: "invoiceNumber".tr, value: invoiceNumber),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: InvoiceLabel(title: "الكمية", value: quantity),
+                      child: InvoiceLabel(title: "quantity".tr, value: quantity),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: InvoiceLabel(
-                          title: "التاريخ", value: date, isDate: true),
+                          title: "date".tr, value: date, isDate: true),
                     ),
                   ],
                 ),
@@ -270,25 +268,25 @@ class InvoiceCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child:
-                          InvoiceLabel(title: "الوزن الصافي", value: netWeight),
+                          InvoiceLabel(title: "netWeight".tr, value: netWeight),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: InvoiceLabel(title: "المادة", value: material),
+                      child: InvoiceLabel(title: "material".tr, value: material),
                     ),
                   ],
                 ),
                 if (isVerified)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.verified, color: Colors.green, size: 28),
-                        SizedBox(width: 8),
+                        const Icon(Icons.verified, color: Colors.green, size: 28),
+                        const SizedBox(width: 8),
                         Text(
-                          "تم التحقق",
-                          style: TextStyle(
+                          "verified".tr,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.green,
@@ -309,9 +307,9 @@ class InvoiceCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("هل الفاتورة صحيحة؟", textAlign: TextAlign.center),
-        content: const Text(
-          "عند تأكيد صحة الفاتورة سيتم وضع علامة التحقق عليها.",
+        title: Text("confirmInvoice".tr, textAlign: TextAlign.center),
+        content: Text(
+          "confirmInvoiceMessage".tr,
           textAlign: TextAlign.center,
         ),
         actions: [
@@ -319,14 +317,14 @@ class InvoiceCard extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text("خاطئة", style: TextStyle(color: Colors.red)),
+            child: Text("incorrect".tr, style: TextStyle(color: Colors.red)),
           ),
           TextButton(
             onPressed: () {
               onVerify();
               Navigator.pop(context);
             },
-            child: const Text("صحيحة", style: TextStyle(color: Colors.green)),
+            child: Text("correct".tr, style: TextStyle(color: Colors.green)),
           ),
         ],
       ),
@@ -373,7 +371,6 @@ class InvoiceLabel extends StatelessWidget {
     );
   }
 }
-
 
 
 
