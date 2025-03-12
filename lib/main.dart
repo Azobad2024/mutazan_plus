@@ -8,9 +8,12 @@ import 'package:mutazan_plus/view/Login.dart';
 import 'package:mutazan_plus/view/profile_page.dart';
 // import 'package:permission_handler/permission_handler.dart';
 import 'controler/Router.dart';
+import 'helpers/permissions_helper.dart';
 import 'languages/translations.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // تهيئة الفلاتر قبل تشغيل التطبيق
+  await PermissionsHelper.requestPermissions(); // ✅ استدعاء دالة طلب الأذونات
   runApp(MyApp());
 }
 
@@ -19,16 +22,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GetMaterialApp( // استخدام GetMaterialApp بدلاً من MaterialApp
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: "Khandevane"),
-      // تعيين اللغة إلى العربية
       locale: const Locale('ar', 'AE'),
       fallbackLocale: const Locale('ar', 'AE'), // اللغة الافتراضية في حالة عدم توفر الترجمة
       translations: AppTranslations(), // إضافة الترجمة
 
-      // تحديد إعدادات الترجمة لدعم النصوص من اليمين إلى اليسار
+      // إعدادات الترجمة لدعم النصوص من اليمين إلى اليسار
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -37,7 +38,6 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('ar', 'AE'), // اللغة العربية
       ],
-      // تحديد اتجاه النصوص افتراضياً إلى اليمين
       builder: (context, child) {
         return Directionality(
           textDirection: TextDirection.rtl, // تعيين اتجاه النصوص
@@ -56,44 +56,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-// void main() async {
-//   // WidgetsFlutterBinding.ensureInitialized(); // تهيئة الفلاتر قبل تشغيل التطبيق
-//   // await PermissionsHelper.requestPermissions(); // ✅ استدعاء دالة طلب الأذونات
-//   runApp(MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GetMaterialApp( // استخدام GetMaterialApp بدلاً من MaterialApp
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(fontFamily: "Khandevane"),
-//       locale: const Locale('ar', 'AE'),
-//       fallbackLocale: const Locale('ar', 'AE'), // اللغة الافتراضية في حالة عدم توفر الترجمة
-//       translations: AppTranslations(), // إضافة الترجمة
-//
-//       // إعدادات الترجمة لدعم النصوص من اليمين إلى اليسار
-//       localizationsDelegates: const [
-//         GlobalMaterialLocalizations.delegate,
-//         GlobalWidgetsLocalizations.delegate,
-//         GlobalCupertinoLocalizations.delegate,
-//       ],
-//       supportedLocales: const [
-//         Locale('ar', 'AE'), // اللغة العربية
-//       ],
-//       builder: (context, child) {
-//         return Directionality(
-//           textDirection: TextDirection.rtl, // تعيين اتجاه النصوص
-//           child: child!,
-//         );
-//       },
-//       initialRoute: LoginScreenWithWelcome.routeName, // الصفحة الأولى
-//       getPages: routers, // استخدام GetX للتنقل
-//     );
-//   }
-// }
 
 
 // void permissionRequest() async {

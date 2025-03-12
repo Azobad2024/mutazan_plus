@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../constants.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage1 extends StatefulWidget {
   const ProfilePage1({super.key});
@@ -12,6 +13,18 @@ class ProfilePage1 extends StatefulWidget {
 }
 
 class _ProfilePage1State extends State<ProfilePage1> {
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -25,7 +38,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
           children: [
             SizedBox(
               height: screenHeight * 0.4,
-              child: const _TopPortion(),
+              child: _TopPortion(imageFile: _imageFile, onCameraTap: _pickImage),
             ),
             const SizedBox(height: 16),
             Text(
@@ -46,7 +59,10 @@ class _ProfilePage1State extends State<ProfilePage1> {
 }
 
 class _TopPortion extends StatelessWidget {
-  const _TopPortion({super.key});
+  final File? imageFile;
+  final VoidCallback onCameraTap;
+
+  const _TopPortion({super.key, this.imageFile, required this.onCameraTap});
 
   @override
   Widget build(BuildContext context) {
@@ -55,23 +71,50 @@ class _TopPortion extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(bottom: 50),
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Color(0xff334E68), Color(0xff829AB1)]),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50),
-                bottomRight: Radius.circular(50),
-              )),
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [Color(0xff334E68), Color(0xff829AB1)],
+            ),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(50),
+              bottomRight: Radius.circular(50),
+            ),
+          ),
         ),
-        const Positioned(
+        Positioned(
           bottom: 0,
           left: 0,
           right: 0,
           child: Center(
-            child: CircleAvatar(
-              radius: 75,
-              backgroundImage: AssetImage('assets/images/myProfile.png'),
+            child: Stack(
+              children: [
+                CircleAvatar(
+                  radius: 75,
+                  backgroundImage: imageFile != null
+                      ? FileImage(imageFile!)
+                      : const AssetImage('assets/images/myProfile.png') as ImageProvider,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: onCameraTap,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue.shade700,
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
