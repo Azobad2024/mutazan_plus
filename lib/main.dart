@@ -8,12 +8,21 @@ import 'package:mutazan_plus/view/Login.dart';
 import 'package:mutazan_plus/view/profile_page.dart';
 // import 'package:permission_handler/permission_handler.dart';
 import 'controler/Router.dart';
+import 'controler/language_controller.dart';
 import 'helpers/permissions_helper.dart';
 import 'languages/translations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // تهيئة الفلاتر قبل تشغيل التطبيق
   await PermissionsHelper.requestPermissions(); // ✅ استدعاء دالة طلب الأذونات
+  await Hive.initFlutter(); // تهيئة Hive
+  await Hive.openBox('settings'); // فتح صندوق لتخزين الإعدادات
+
+  final languageController = Get.put(LanguageController());
+  await languageController.loadSavedLanguage(); // تحميل اللغة المحفوظة
+
   runApp(MyApp());
 }
 
@@ -25,8 +34,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp( // استخدام GetMaterialApp بدلاً من MaterialApp
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: "Khandevane"),
-      locale: const Locale('ar', 'AE'),
-      fallbackLocale: const Locale('ar', 'AE'), // اللغة الافتراضية في حالة عدم توفر الترجمة
+      locale: Get.find<LanguageController>().isArabic.value
+          ? const Locale('ar', 'AE')
+          : const Locale('en', 'US'), // اللغة المحفوظة
+      fallbackLocale: const Locale('en', 'US'), // اللغة الاحتياطية
       translations: AppTranslations(), // إضافة الترجمة
 
       // إعدادات الترجمة لدعم النصوص من اليمين إلى اليسار
