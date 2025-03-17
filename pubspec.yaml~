@@ -46,7 +46,6 @@ dependencies:
   hive:
   hive_flutter:
   build_runner:
-  hive_generator:
 
 dev_dependencies:
   flutter_test:

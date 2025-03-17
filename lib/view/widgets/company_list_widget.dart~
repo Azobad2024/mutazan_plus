@@ -10,6 +10,29 @@ class CompanyListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+    return Obx(() {
+      if (companyController.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (companyController.companies.isEmpty) {
+        return const Center(child: Text("لا توجد شركات متاحة"));
+      } else {
+        return ListView.builder(
+          cacheExtent: 1000, // تحسين الأداء عند التمرير
+          itemCount: companyController.companies.length,
+          itemBuilder: (context, index) {
+            final company = companyController.companies[index];
+            return CompanyRowWidget(
+              name: company.companyName,
+              status: company.country == "اليمن" ? Icons.check_circle : Icons.cancel,
+              statusColor: company.country == "اليمن" ? Colors.green : Colors.red,
+              imagePath: company.logo,
+            );
+          },
+        );
+      }
+    });
+=======
     return Expanded(
       child: Obx(() {
         if (companyController.isLoading.value && companyController.companies.isEmpty) {
@@ -32,8 +55,39 @@ class CompanyListWidget extends StatelessWidget {
         }
       }),
     );
+>>>>>>> 65064e8 (اضافة قاعدة بيانات الى صفحة الشركات لحفظ التغييرات وابيانات التي تاتي من api محليا)
   }
 }
+// class CompanyListWidget extends StatelessWidget {
+//   final CompanyController companyController = Get.put(CompanyController());
+//
+//   CompanyListWidget({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Obx(() {
+//       if (companyController.isLoading.value) {
+//         return const Center(child: CircularProgressIndicator());
+//       } else if (companyController.companies.isEmpty) {
+//         return const Center(child: Text("لا توجد شركات متاحة"));
+//       } else {
+//         return ListView.builder(
+//           cacheExtent: 1000, // تحسين الأداء عند التمرير
+//           itemCount: companyController.companies.length,
+//           itemBuilder: (context, index) {
+//             final company = companyController.companies[index];
+//             return CompanyRowWidget(
+//               name: company.companyName,
+//               status: company.country == "اليمن" ? Icons.check_circle : Icons.cancel,
+//               statusColor: company.country == "اليمن" ? Colors.green : Colors.red,
+//               imagePath: company.logo,
+//             );
+//           },
+//         );
+//       }
+//     });
+//   }
+// }
 
 class CompanyRowWidget extends StatelessWidget {
   final String name;
@@ -74,7 +128,11 @@ class CompanyRowWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: imagePath.isNotEmpty
                   ? CachedNetworkImage(
+<<<<<<< HEAD
+                imageUrl: "http://192.168.150.162:8000$imagePath",
+=======
                 imageUrl: "http://192.168.83.162:8000$imagePath",
+>>>>>>> 65064e8 (اضافة قاعدة بيانات الى صفحة الشركات لحفظ التغييرات وابيانات التي تاتي من api محليا)
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
@@ -109,6 +167,7 @@ class CompanyRowWidget extends StatelessWidget {
     );
   }
 }
+<<<<<<< HEAD
 
 
 // class CompanyListWidget extends StatelessWidget {
@@ -208,3 +267,5 @@ class CompanyRowWidget extends StatelessWidget {
 //     );
 //   }
 // }
+=======
+>>>>>>> 65064e8 (اضافة قاعدة بيانات الى صفحة الشركات لحفظ التغييرات وابيانات التي تاتي من api محليا)
