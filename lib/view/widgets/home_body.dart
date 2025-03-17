@@ -5,14 +5,14 @@ import 'header_row_widget.dart';
 import 'StatsRowWidget.dart';
 
 class Homebody extends StatelessWidget {
-  const   Homebody({super.key});
+  const Homebody({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.max, // يضمن استخدام كل المساحة المتاحة
       children: [
-        Expanded( // يملأ المساحة المتبقية دون ترك فراغ غير ضروري
+        Expanded(
           child: Container(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
             child: Column(
@@ -23,12 +23,7 @@ class Homebody extends StatelessWidget {
                 HeaderRowWidget(), // صف العناوين (الشركات - الحالة)
                 const SizedBox(height: 6),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 4.0,left: 4.0),
-                      child: CompanyListWidget(), // قائمة الشركات القابلة للتمرير
-                    ),
-                  ),
+                  child: CompanyListWidget(), // قائمة الشركات القابلة للتمرير
                 ),
               ],
             ),

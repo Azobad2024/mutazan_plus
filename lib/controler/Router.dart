@@ -1,5 +1,5 @@
 import 'package:get/get.dart'; // استيراد GetX
-import '../view/Company.dart';
+import '../view/Company.dart'; // تأكد من أن المسار صحيح
 import '../view/Home.dart';
 import '../view/Login.dart';
 import '../view/profile_page.dart';
@@ -16,8 +16,8 @@ final List<GetPage> routers = [
     page: () => LoginScreenWithWelcome(),
   ),
   GetPage(
-    name: Company.routeName,
-    page: () => const Company(),
+    name: CompanyPage.routeName, // تم تغيير الاسم إلى CompanyPage
+    page: () => const CompanyPage(), // تم تغيير الاسم إلى CompanyPage
   ),
   GetPage(
     name: ProfilePage1.routeName,
