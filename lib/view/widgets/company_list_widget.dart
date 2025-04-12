@@ -111,6 +111,7 @@ class CompanyRowWidget extends StatelessWidget {
 }
 
 
+
 // class CompanyListWidget extends StatelessWidget {
 //   const CompanyListWidget({super.key});
 //

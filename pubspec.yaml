@@ -36,9 +36,6 @@ dependencies:
   get:
   http:
   cached_network_image:
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   local_auth: ^2.3.0
   permission_handler: ^11.4.0
@@ -46,18 +43,20 @@ dependencies:
   hive:
   hive_flutter:
   build_runner:
-  hive_generator:
+#  get_it:
+#  freezed: ^2.5.7
+#  freezed_annotation: ^2.4.4
+#  dio:
+#  retrofit:
+#  json_annotation:
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  hive_generator:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

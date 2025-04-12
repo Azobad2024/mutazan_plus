@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
 import '../../constants.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const CustomElevatedButton({
     super.key,
@@ -18,10 +17,10 @@ class CustomElevatedButton extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2), // لون الظل مع شفافية
-            blurRadius: 6, // مقدار التشويش للظل
-            spreadRadius: 2, // مقدار انتشار الظل
-            offset: const Offset(2, 4), // الإزاحة (أفقي، عمودي)
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            spreadRadius: 2,
+            offset: const Offset(2, 4),
           ),
         ],
       ),
@@ -31,7 +30,7 @@ class CustomElevatedButton extends StatelessWidget {
           backgroundColor: backgroundColor,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10), // تحديد نصف القطر للحواف
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: Text(

@@ -41,7 +41,7 @@ class _SettingsState extends State<Settings> {
                 ],
                 onChanged: (value) {
                   if (value != null) {
-                    languageController.changeLanguage(value);
+                    languageController.changeLanguage(value ? AppLanguage.arabic : AppLanguage.english);
                   }
                 },
               )),

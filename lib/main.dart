@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get/get.dart'; // استيراد GetX
-import 'package:mutazan_plus/view/Company.dart';
-import 'package:mutazan_plus/view/Home.dart';
-import 'package:mutazan_plus/view/Bills.dart';
+import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mutazan_plus/view/Login.dart';
-import 'package:mutazan_plus/view/profile_page.dart';
-// import 'package:permission_handler/permission_handler.dart';
+
 import 'controler/Router.dart';
 import 'controler/language_controller.dart';
+import 'controler/login_controller.dart';
 import 'helpers/permissions_helper.dart';
 import 'languages/translations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-
 import 'model/company_model.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PermissionsHelper.requestPermissions();
-  await Hive.initFlutter();
-  await Hive.openBox('settings');
-  Hive.registerAdapter(CompanyAdapter());
-  await Hive.openBox<Company>('companyBox');
+  await initHive();
+
   final languageController = Get.put(LanguageController());
   await languageController.loadSavedLanguage();
-  runApp(MyApp());
+
+  runApp(const MyApp());
+}
+
+Future<void> initHive() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(CompanyAdapter());
+  await Hive.openBox('settings');
+  await Hive.openBox<Company>('companyBox');
 }
 
 class MyApp extends StatelessWidget {
@@ -46,20 +47,18 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('ar', 'AE'),
-      ],
-      builder: (context, child) {
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: child!,
-        );
-      },
+      supportedLocales: const [Locale('ar', 'AE')],
+      builder: (context, child) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: child!,
+      ),
       initialRoute: LoginScreenWithWelcome.routeName,
-      getPages: routers,
+      getPages: AppRoutes.routes,
     );
   }
 }
+
+
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized(); // تهيئة الفلاتر قبل تشغيل التطبيق

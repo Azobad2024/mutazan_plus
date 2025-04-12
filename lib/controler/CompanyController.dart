@@ -31,7 +31,7 @@ class CompanyController extends GetxController {
   Future<void> fetchCompanies() async {
     try {
       isLoading(true);
-      final response = await http.get(Uri.parse('http://192.168.83.162:8000/api/companies/'));
+      final response = await http.get(Uri.parse('http://192.168.1.3:8000/api/companies/'));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = await compute(parseJson, response.body);
