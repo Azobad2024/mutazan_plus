@@ -12,12 +12,14 @@ class CompanyListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Obx(() {
-        if (companyController.isLoading.value && companyController.companies.isEmpty) {
+        if (companyController.isLoading.value &&
+            companyController.companies.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         } else if (companyController.companies.isEmpty) {
           return const Center(child: Text("لا توجد شركات متاحة"));
         } else {
           return ListView.builder(
+            physics: const BouncingScrollPhysics(),
             itemCount: companyController.companies.length,
             itemBuilder: (context, index) {
               final company = companyController.companies[index];
@@ -74,30 +76,32 @@ class CompanyRowWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: imagePath.isNotEmpty
                   ? CachedNetworkImage(
-                imageUrl: "http://192.168.83.162:8000$imagePath",
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Image.asset(
-                  'assets/images/images.png',
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
-              )
+                      imageUrl: "http://192.168.83.162:8000$imagePath",
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Image.asset(
+                        'assets/images/images.png',
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    )
                   : Image.asset(
-                'assets/images/images.png',
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
+                      'assets/images/images.png',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 name,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.right,
               ),
             ),
@@ -109,8 +113,6 @@ class CompanyRowWidget extends StatelessWidget {
     );
   }
 }
-
-
 
 // class CompanyListWidget extends StatelessWidget {
 //   const CompanyListWidget({super.key});

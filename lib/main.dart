@@ -6,7 +6,6 @@ import 'package:mutazan_plus/view/Login.dart';
 
 import 'controler/Router.dart';
 import 'controler/language_controller.dart';
-import 'controler/login_controller.dart';
 import 'helpers/permissions_helper.dart';
 import 'languages/translations.dart';
 import 'model/company_model.dart';

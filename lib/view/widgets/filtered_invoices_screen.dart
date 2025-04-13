@@ -134,6 +134,7 @@ class FilteredInvoicesScreen extends StatelessWidget {
               // ✅ قائمة الفواتير
               Expanded(
                 child: Obx(() => ListView.builder(
+                  physics: const BouncingScrollPhysics(),
                   itemCount: controller.filteredInvoices.length,
                   itemBuilder: (context, index) {
                     final invoice = controller.filteredInvoices[index];
