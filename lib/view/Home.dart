@@ -5,7 +5,6 @@ import 'package:mutazan_plus/view/widgets/header_widget.dart';
 import 'package:mutazan_plus/view/widgets/home_body.dart';
 import 'package:mutazan_plus/view/widgets/StatsWidget.dart';
 import 'package:mutazan_plus/view/widgets/container_radius.dart';
-import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
 
 class Home extends StatelessWidget {
   static String routeName = "/Home";

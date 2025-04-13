@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
-import '../view/widgets/header_row_widget.dart';
 import '../constants.dart';
 import '../controler/bills_controller.dart'; // استيراد الـ Controller
 
