@@ -76,7 +76,7 @@ class CompanyRowWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: imagePath.isNotEmpty
                   ? CachedNetworkImage(
-                      imageUrl: "http://192.168.83.162:8000$imagePath",
+                      imageUrl: "http://192.168.130.209:8000$imagePath",
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,

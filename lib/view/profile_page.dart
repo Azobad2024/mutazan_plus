@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../constants.dart';
+import '../app_colors.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePage1 extends StatefulWidget {
@@ -30,7 +30,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: backgroundColorAppBar,
+        backgroundColor: AppColors.backgroundColorAppBar,
       ),
       body: SafeArea(
         child: Column(
@@ -196,7 +196,7 @@ class _UserInfoRow extends StatelessWidget {
 // import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
 //
-// import '../constants.dart';
+// import '../app_colors.dart';
 //
 // class ProfilePage1 extends StatefulWidget {
 //   const ProfilePage1({Key? key}) : super(key: key);

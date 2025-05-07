@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mutazan_plus/view/widgets/company_list_widget.dart';
 import 'package:mutazan_plus/view/widgets/container_radius.dart';
 import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
-import '../constants.dart';
+import '../app_colors.dart';
 
 class CompanyPage extends StatelessWidget {
   static String routeName = "/Company";
@@ -12,9 +12,9 @@ class CompanyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: AppColors.backgroundColor,
         title: const Text(
           "الشركات",
           style: TextStyle(
@@ -61,7 +61,7 @@ class CompanyPage extends StatelessWidget {
 // import 'package:mutazan_plus/view/widgets/container_radius.dart';
 // import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
 //
-// import '../constants.dart';
+// import '../app_colors.dart';
 //
 // class Company extends StatelessWidget {
 //   static String routeName = "/Company";

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mutazan_plus/constants.dart';
+import 'package:mutazan_plus/app_colors.dart';
 import 'package:mutazan_plus/view/widgets/footer_widget.dart';
 import 'package:mutazan_plus/view/widgets/header_widget.dart';
 import 'package:mutazan_plus/view/widgets/home_body.dart';
@@ -14,9 +14,9 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor, // اللون الأساسي للخلفية
+      backgroundColor: AppColors.backgroundColor, // اللون الأساسي للخلفية
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: AppColors.backgroundColor,
         automaticallyImplyLeading: false, // إخفاء سهم العودة
         title: HeaderWidget(), // إضافة HeaderWidget في العنوان
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
-import '../app_colors.dart';
+import '../constants.dart';
 import '../controler/bills_controller.dart'; // استيراد الـ Controller
 
 class InvoicesScreen extends StatelessWidget {
@@ -29,9 +29,9 @@ class InvoicesScreen extends StatelessWidget {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false, // منع ظهور الناف بار فوق الكيبورد
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: backgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: backgroundColor,
           elevation: 0,
           title: Row(
             children: [
@@ -378,7 +378,7 @@ class InvoiceLabel extends StatelessWidget {
 // import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
 // import '../view/widgets/header_row_widget.dart';
 
-// import '../app_colors.dart';
+// import '../constants.dart';
 
 // class InvoicesScreen extends StatefulWidget {
 //   final String companyName;

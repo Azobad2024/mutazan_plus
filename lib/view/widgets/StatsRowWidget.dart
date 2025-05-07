@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../app_colors.dart';
 import 'stat_card_circle.dart';
 
 class StatsRowWidget extends StatelessWidget {
@@ -11,7 +11,7 @@ class StatsRowWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: containerColor,
+        color: AppColors.containerColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -33,7 +33,7 @@ class StatsRowWidget extends StatelessWidget {
           Container(
             width: 1,
             height: 60,
-            color: backgroundColor,
+            color: AppColors.backgroundColor,
           ),
           const StatCard1(
             assetIcon: 'assets/icons/shuttle-bus.png',

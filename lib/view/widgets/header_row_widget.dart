@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../constants.dart';
+import '../../app_colors.dart';
 
 class HeaderRowWidget extends StatelessWidget {
   const HeaderRowWidget({super.key});
@@ -10,7 +10,7 @@ class HeaderRowWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: containerColor,
+        color: AppColors.containerColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2), // لون الظل مع شفافية
@@ -28,7 +28,7 @@ class HeaderRowWidget extends StatelessWidget {
           Container(
             width: 1,
             height: 40,
-            color: backgroundColor,
+            color: AppColors.backgroundColor,
           ),
           HeaderCard(title: "status".tr), // استخدام الترجمة
         ],
@@ -47,7 +47,7 @@ class HeaderCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: container1Color,
+        color: AppColors.container1Color,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Text(

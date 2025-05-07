@@ -108,8 +108,8 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                           });
                         },
                         icon: _obscurePassword
-                            ? const Icon(Icons.visibility_outlined)
-                            : const Icon(Icons.visibility_off_outlined),
+                            ? const Icon(Icons.visibility_off_outlined)
+                            : const Icon(Icons.visibility_outlined),
                       ),
                     ),
                   ),

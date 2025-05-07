@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mutazan_plus/view/widgets/custom_navbar.dart';
-import '../../constants.dart';
+import '../../app_colors.dart';
 import '../../controler/bills_controller.dart';
 import '../Bills.dart';
 
@@ -37,9 +37,9 @@ class FilteredInvoicesScreen extends StatelessWidget {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false, // منع ظهور الناف بار فوق الكيبورد
-        backgroundColor: backgroundColor,
+        backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
-          backgroundColor: backgroundColor,
+          backgroundColor: AppColors.backgroundColor,
           elevation: 0,
           title: Row(
             children: [

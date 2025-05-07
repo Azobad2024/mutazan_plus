@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mutazan_plus/view/widgets/login_screen.dart';
 
-import '../constants.dart';
+import '../app_colors.dart';
 
 class LoginScreenWithWelcome extends StatefulWidget {
   static String routeName = "/Login";
@@ -30,7 +30,7 @@ class _LoginScreenWithWelcomeState extends State<LoginScreenWithWelcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -74,7 +74,7 @@ class _LoginScreenWithWelcomeState extends State<LoginScreenWithWelcome> {
 // import 'package:flutter/material.dart';
 // import 'package:mutazan_plus/view/widgets/login_screen.dart';
 //
-// import '../constants.dart';
+// import '../app_colors.dart';
 //
 // class LoginScreenWithWelcome extends StatefulWidget {
 //   static String routeName = "/Login";

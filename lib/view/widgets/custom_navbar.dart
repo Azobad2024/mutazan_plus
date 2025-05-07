@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../constants.dart';
+import '../../app_colors.dart';
 
 class NavigationBarItems extends StatefulWidget {
   final int selectedIndex;
@@ -26,8 +26,8 @@ class _NavigationBarItemsState extends State<NavigationBarItems> {
         SizedBox(
           height: 80,
           child: Container(
-            decoration: const BoxDecoration(
-              color: backgroundColor,
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColor,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40),
                 topRight: Radius.circular(40),

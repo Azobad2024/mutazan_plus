@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../app_colors.dart';
 
 class StatCard extends StatelessWidget {
   final String title;
@@ -42,9 +42,9 @@ class StatCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 16,
-                  color: backgroundColor, // اللون هنا يمكن تغييره حسب الحاجة
+                  color: AppColors.backgroundColor, // اللون هنا يمكن تغييره حسب الحاجة
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -66,10 +66,10 @@ class StatCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: backgroundColor,
+              color: AppColors.backgroundColor,
             ),
           ),
         ],
