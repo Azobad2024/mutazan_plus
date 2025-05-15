@@ -2,7 +2,7 @@ name: mutazan_plus
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -28,42 +28,48 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  bloc: ^9.0.0
+  build_runner: null
+  cached_network_image: null
+  cupertino_icons: ^1.0.8
+  dartz: ^0.10.1
+  data_connection_checker_tv: ^0.3.5-nullsafety
+  dio: ^5.8.0+1
+  equatable: ^2.0.7
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
-  flutter_svg:
-  get:
-  http:
-  cached_network_image:
-  cupertino_icons: ^1.0.8
+  flutter_svg: null
+  get: null
+  get_it: ^8.0.3
+  go_router: ^15.1.1
+  hive: null
+  hive_flutter: null
+  http: null
+  image_picker: null
+  jwt_decoder: ^2.0.1
   local_auth: ^2.3.0
   permission_handler: ^11.4.0
-  image_picker:
-  hive:
-  hive_flutter:
-  build_runner:
+  shared_preferences: ^2.5.3
+  smooth_page_indicator: ^1.2.1
 #  get_it:
 #  freezed: ^2.5.7
 #  freezed_annotation: ^2.4.4
 #  dio:
 #  retrofit:
 #  json_annotation:
-
-
 dev_dependencies:
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^5.0.0
-  hive_generator:
+  hive_generator: null
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -77,19 +83,17 @@ flutter:
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-     - family: Khandevane
-       fonts:
-         - asset: fonts/Khandevane.ttf
+    - family: Khandevane
+      fonts:
+        - asset: fonts/Khandevane.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
@@ -100,3 +104,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_assets:
+  assets_path: assets/images/
+  output_path: lib/core/utils/
+  filename: app_assets.dart
+  field_prefix: null
