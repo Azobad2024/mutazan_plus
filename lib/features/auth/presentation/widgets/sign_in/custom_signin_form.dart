@@ -24,7 +24,7 @@ class CustomSignInForm extends StatelessWidget {
       conditionalValues: [
         responsive_framework.Condition.largerThan(name: responsive_framework.TABLET, value: 24),
       ],
-    ).value!;
+    ).value;
 
     return Form(
       key: cubit.signInFormKey,
@@ -53,7 +53,7 @@ class CustomSignInForm extends StatelessWidget {
               conditionalValues: [
                 responsive_framework.Condition.largerThan(name: responsive_framework.TABLET, value: 16)
               ],
-            ).value!,
+            ).value,
           ),
         );
       },

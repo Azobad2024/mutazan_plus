@@ -6,9 +6,9 @@ import 'package:mutazan_plus/core/databases/api/end_points.dart';
 import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
 import 'package:mutazan_plus/core/functions/navigation.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
+import 'package:mutazan_plus/core/widgets/show_top_snack_bar.dart';
 import 'package:mutazan_plus/features/auth/biometric/BiometricAuthPresenter.dart';
 import 'package:mutazan_plus/features/auth/biometric/BiometricAuthService.dart';
-import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
 
 class BiometricLoginButton extends StatefulWidget {
   const BiometricLoginButton({super.key});

@@ -29,7 +29,7 @@ class StatCard1 extends StatelessWidget {
         Condition.largerThan(name: MOBILE, value: 100),
         Condition.largerThan(name: TABLET, value: 120),
       ],
-    ).value!;
+    ).value;
     final strokeWidth = circleDiameter * 0.05;
     final avatarR = circleDiameter * 0.43;
     final iconSize = circleDiameter * 0.55;
@@ -39,14 +39,14 @@ class StatCard1 extends StatelessWidget {
       conditionalValues: const [
         Condition.largerThan(name: TABLET, value: 12),
       ],
-    ).value!;
+    ).value;
     final fontSize = ResponsiveValue<double>(
       context,
       defaultValue: 16,
       conditionalValues: const [
         Condition.largerThan(name: TABLET, value: 18),
       ],
-    ).value!;
+    ).value;
 
     // الخلفيات بحسب الثيم
     final outerBg = isDark

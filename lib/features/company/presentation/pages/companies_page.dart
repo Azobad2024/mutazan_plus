@@ -1,5 +1,4 @@
-// lib/features/company/presentation/pages/companies_page.dart
-
+// استيراد الحزم المطلوبة
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,9 +11,11 @@ import 'package:mutazan_plus/core/functions/navigation.dart';
 import 'package:mutazan_plus/core/services/services_locator.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
+import 'package:mutazan_plus/core/widgets/show_top_snack_bar.dart';
 import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
 import 'package:mutazan_plus/features/company/presentation/cubit/company_state.dart';
 
+// صفحة عرض الشركات
 class CompaniesPage extends StatefulWidget {
   const CompaniesPage({super.key});
 
@@ -23,19 +24,23 @@ class CompaniesPage extends StatefulWidget {
 }
 
 class _CompaniesPageState extends State<CompaniesPage> {
-  bool _hasFetched = false;
+  bool _hasFetched = false; // لتفادي استدعاء البيانات أكثر من مرة
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // جلب الشركات مرة واحدة عند الدخول لأول مرة
     if (!_hasFetched) {
       context.read<CompanyCubit>().fetchCompanies();
       _hasFetched = true;
     }
   }
 
+  // دالة لتحديث البيانات عند السحب للأسفل
   Future<void> _onRefresh() async {
     final connected = await getIt<NetworkInfo>().isConnected;
+
+    // إظهار رسالة تنبيه إذا لم يوجد اتصال بالإنترنت
     if (!connected) {
       showTopSnackBar(
         context,
@@ -44,6 +49,8 @@ class _CompaniesPageState extends State<CompaniesPage> {
       );
       return;
     }
+
+    // إعادة جلب الشركات من السيرفر
     await context.read<CompanyCubit>().fetchCompanies();
   }
 
@@ -55,7 +62,7 @@ class _CompaniesPageState extends State<CompaniesPage> {
     final avatarRadius = media.size.width * (isLandscape ? 0.06 : 0.08);
     final horizontalPadding = media.size.width * 0.05;
 
-    // لضبط شريط الحالة
+    // ضبط شكل شريط الحالة العلوي
     final overlay = SystemUiOverlayStyle.dark.copyWith(
       statusBarColor: AppColors.backgroundColorAppBar,
       statusBarIconBrightness: Brightness.light,
@@ -65,11 +72,12 @@ class _CompaniesPageState extends State<CompaniesPage> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: overlay,
       child: RefreshIndicator(
-        onRefresh: _onRefresh,
+        onRefresh: _onRefresh, // عند سحب الشاشة للتحديث
         backgroundColor: AppColors.primaryBackgroundColor!,
         color: AppColors.primaryColor,
         child: BlocConsumer<CompanyCubit, CompanyState>(
           listener: (context, state) {
+            // إذا حدث خطأ أثناء الجلب يتم عرض تنبيه
             if (state is CompanyFailure) {
               showTopSnackBar(
                 context,
@@ -79,6 +87,7 @@ class _CompaniesPageState extends State<CompaniesPage> {
             }
           },
           builder: (context, state) {
+            // حالة التحميل (جاري تحميل الشركات)
             if (state is CompanyLoading) {
               return Center(
                 child: CircularProgressIndicator(
@@ -86,6 +95,8 @@ class _CompaniesPageState extends State<CompaniesPage> {
                 ),
               );
             }
+
+            // حالة الفشل (خطأ أثناء جلب الشركات)
             if (state is CompanyFailure) {
               return Center(
                 child: Column(
@@ -117,7 +128,11 @@ class _CompaniesPageState extends State<CompaniesPage> {
                 ),
               );
             }
+
+            // حالة النجاح، وتم جلب قائمة الشركات
             final list = (state as CompanySuccess).companies;
+
+            // إذا لم توجد أي شركة
             if (list.isEmpty) {
               return Center(
                 child: Text(
@@ -126,16 +141,20 @@ class _CompaniesPageState extends State<CompaniesPage> {
                 ),
               );
             }
+
+            // عرض الشركات في قائمة قابلة للتمرير
             return ListView.builder(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.symmetric(vertical: 16),
               itemCount: list.length,
               itemBuilder: (_, i) {
-                final c = list[i];
+                final c = list[i]; // شركة واحدة
                 final rawLogo = c.logo;
+                // ربط شعار الشركة بالرابط الصحيح
                 final logoUrl = rawLogo.startsWith('http')
                     ? rawLogo
                     : '${EndPoint.baseUrl}$rawLogo';
+                // تحديد حالة الشركة نشطة أم لا
                 final isActive = c.active == 'false';
 
                 return Padding(
@@ -144,10 +163,12 @@ class _CompaniesPageState extends State<CompaniesPage> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(14),
                     onTap: () {
+                      // عند الضغط يتم حفظ بيانات الشركة المختارة
                       CacheHelper().saveData(
                         key: ApiKey.xSchema,
                         value: c.schemaName,
                       );
+                      // الانتقال إلى صفحة الفواتير مع تمرير بيانات الشركة
                       customNavigat(
                         context,
                         '/invoices',
@@ -207,6 +228,8 @@ class _CompaniesPageState extends State<CompaniesPage> {
     );
   }
 }
+
+
 
 // // lib/features/company/presentation/pages/companies_page.dart
 

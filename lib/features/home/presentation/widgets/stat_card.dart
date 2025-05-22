@@ -42,7 +42,7 @@ class StatCard extends StatelessWidget {
         Condition.largerThan(name: MOBILE, value: 12),
         Condition.largerThan(name: TABLET, value: 16),
       ],
-    ).value!;
+    ).value;
 
     final horizontalPad = verticalPad;
     final iconBaseSize = 28.0;

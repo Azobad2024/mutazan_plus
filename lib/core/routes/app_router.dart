@@ -1,9 +1,7 @@
 // router.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mutazan_plus/features/auth/presentation/views/sign_in_view.dart';
-import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
 import 'package:mutazan_plus/features/invoice/presentation/pages/invoice_page.dart';
 import 'package:mutazan_plus/features/on_boarding/presentation/views/on_boarding_view.dart';
 import 'package:mutazan_plus/features/splash/presentation/views/splash_view.dart';

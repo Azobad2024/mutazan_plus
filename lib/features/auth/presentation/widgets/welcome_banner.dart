@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:mutazan_plus/core/utils/app_assets.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:mutazan_plus/core/utils/app_text_styles.dart';
@@ -45,14 +43,14 @@ class WelcomeBanner extends StatelessWidget {
             conditionalValues: const [
               Condition.largerThan(name: MOBILE, value: 32),
             ],
-          ).value!,
+          ).value,
           vertical: ResponsiveValue<double>(
             context,
             defaultValue: 16,
             conditionalValues: const [
               Condition.largerThan(name: MOBILE, value: 24),
             ],
-          ).value!,
+          ).value,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

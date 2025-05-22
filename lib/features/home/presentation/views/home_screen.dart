@@ -30,7 +30,7 @@ class Home extends StatelessWidget {
         resp.Condition.largerThan(name: resp.MOBILE, value: 24),
         resp.Condition.largerThan(name: resp.TABLET, value: 32),
       ],
-    ).value!;
+    ).value;
 
     final verticalSpacing = resp.ResponsiveValue<double>(
       context,
@@ -39,7 +39,7 @@ class Home extends StatelessWidget {
         Condition.largerThan(name: MOBILE, value: 16),
         resp.Condition.largerThan(name: TABLET, value: 24),
       ],
-    ).value!;
+    ).value;
 
     final circleRadius = resp.ResponsiveValue<double>(
       context,
@@ -48,7 +48,7 @@ class Home extends StatelessWidget {
         resp.Condition.largerThan(name: resp.MOBILE, value: 10),
         resp.Condition.largerThan(name: resp.TABLET, value: 12),
       ],
-    ).value!;
+    ).value;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,

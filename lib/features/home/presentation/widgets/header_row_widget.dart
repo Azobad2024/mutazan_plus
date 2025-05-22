@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart' as responsive;
-import 'package:mutazan_plus/core/utils/app_colors.dart';
 
 class HeaderRowWidget extends StatelessWidget {
   const HeaderRowWidget({super.key});
@@ -16,7 +15,7 @@ class HeaderRowWidget extends StatelessWidget {
         responsive.Condition.smallerThan(name: responsive.MOBILE, value: 12.0),
         responsive.Condition.largerThan(name: responsive.TABLET, value: 24.0),
       ],
-    ).value!;
+    ).value;
     final verticalPadding = responsive.ResponsiveValue<double>(
       context,
       defaultValue: 8.0,
@@ -24,14 +23,14 @@ class HeaderRowWidget extends StatelessWidget {
         responsive.Condition.largerThan(name: responsive.MOBILE, value: 12.0),
         responsive.Condition.largerThan(name: responsive.TABLET, value: 16.0),
       ],
-    ).value!;
+    ).value;
     final dividerHeight = responsive.ResponsiveValue<double>(
       context,
       defaultValue: 40.0,
       conditionalValues: [
         responsive.Condition.largerThan(name: responsive.TABLET, value: 60.0),
       ],
-    ).value!;
+    ).value;
     final cardHPad = horizontalPadding * 0.75;
     final cardVPad = verticalPadding * 0.75;
     final fontSize = responsive.ResponsiveValue<double>(
@@ -41,7 +40,7 @@ class HeaderRowWidget extends StatelessWidget {
         responsive.Condition.largerThan(name: responsive.MOBILE, value: 16.0),
         responsive.Condition.largerThan(name: responsive.TABLET, value: 18.0),
       ],
-    ).value!;
+    ).value;
 
     final theme = Theme.of(context);
     final cardBackground = theme.cardColor;

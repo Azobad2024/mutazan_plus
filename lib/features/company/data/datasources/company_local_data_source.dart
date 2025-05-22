@@ -10,6 +10,7 @@ class CompanyLocalDataSource {
 
   CompanyLocalDataSource(this.cache);
 
+// تقوم بتحويل قائمة الشركات إلى JSON وتخزينها في التخزين المحلي
   Future<void> cacheCompanies(List<CompanyModel> list) async {
     final jsonList = list.map((m) => m.toJson()).toList();
     await cache.saveData(key: _cacheKey, value: json.encode(jsonList));

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
+import 'package:mutazan_plus/core/widgets/show_top_snack_bar.dart';
 import 'package:responsive_framework/responsive_framework.dart' as responsive;
 
 import 'package:mutazan_plus/core/utils/app_colors.dart';
@@ -43,7 +43,7 @@ class SignInView extends StatelessWidget {
         responsive.Condition.smallerThan(name: responsive.MOBILE, value: 16),
         responsive.Condition.largerThan(name: responsive.TABLET, value: 32),
       ],
-    ).value!;
+    ).value;
     final topBannerHeight = responsive.ResponsiveValue<double>(
       context,
       defaultValue: 0.3,
@@ -91,7 +91,7 @@ class SignInView extends StatelessWidget {
                               conditionalValues: [
                             responsive.Condition.largerThan(
                                 name: responsive.TABLET, value: 32)
-                          ]).value!),
+                          ]).value),
                     ),
 
                     // نص الترحيب
@@ -111,7 +111,7 @@ class SignInView extends StatelessWidget {
                               conditionalValues: [
                             responsive.Condition.largerThan(
                                 name: responsive.TABLET, value: 32)
-                          ]).value!),
+                          ]).value),
                     ),
 
                     // نموذج تسجيل الدخول داخل بطاقة
@@ -139,7 +139,7 @@ class SignInView extends StatelessWidget {
                                   responsive.Condition.largerThan(
                                       name: responsive.TABLET, value: 32),
                                 ],
-                              ).value!,
+                              ).value,
                             ),
                             child: const CustomSignInForm(),
                           ),
@@ -154,7 +154,7 @@ class SignInView extends StatelessWidget {
                               conditionalValues: [
                             responsive.Condition.largerThan(
                                 name: responsive.TABLET, value: 32)
-                          ]).value!),
+                          ]).value),
                     ),
                   ],
                 ),

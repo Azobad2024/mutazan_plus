@@ -37,7 +37,7 @@ class _SplashViewState extends State<SplashView> {
         Condition.largerThan(name: MOBILE, value: 64),
         Condition.largerThan(name: TABLET, value: 80),
       ],
-    ).value!;
+    ).value;
 
     return Scaffold(
       // خلفية الشاشة من الثيم

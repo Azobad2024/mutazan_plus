@@ -16,21 +16,21 @@ class StatsRowWidget extends StatelessWidget {
         Condition.largerThan(name: MOBILE, value: 12),
         Condition.largerThan(name: TABLET, value: 16),
       ],
-    ).value!;
+    ).value;
     final cardSpacing = ResponsiveValue<double>(
       context,
       defaultValue: 12,
       conditionalValues: [
         Condition.largerThan(name: TABLET, value: 24),
       ],
-    ).value!;
+    ).value;
     final dividerHeight = ResponsiveValue<double>(
       context,
       defaultValue: 80,
       conditionalValues: [
         Condition.largerThan(name: TABLET, value: 120),
       ],
-    ).value!;
+    ).value;
 
     final theme = Theme.of(context);
 

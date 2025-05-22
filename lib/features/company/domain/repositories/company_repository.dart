@@ -1,3 +1,5 @@
+// lib/features/company/domain/repositories/company_repository.dart
+
 import 'package:dartz/dartz.dart';
 import 'package:mutazan_plus/features/company/domain/entities/company_entitiy.dart';
 import '../../../../../core/errors/failure.dart';
