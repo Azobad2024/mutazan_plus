@@ -24,7 +24,7 @@ class UserNameInputField extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           children: [
-            Icon(Icons.email_outlined, size: 28, color: AppColors.grey),
+            Icon(Icons.email_outlined, size: 28, color: AppColors.backgroundColor),
             const SizedBox(width: 8),
             Expanded(
               child: TextFormField(

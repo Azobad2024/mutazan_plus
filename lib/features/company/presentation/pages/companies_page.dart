@@ -1,7 +1,10 @@
 // lib/features/company/presentation/pages/companies_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+
 import 'package:mutazan_plus/core/connection/network_info.dart';
 import 'package:mutazan_plus/core/databases/api/end_points.dart';
 import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
@@ -9,11 +12,11 @@ import 'package:mutazan_plus/core/functions/navigation.dart';
 import 'package:mutazan_plus/core/services/services_locator.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
-import '../cubit/company_cubit.dart';
-import '../cubit/company_state.dart';
+import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
+import 'package:mutazan_plus/features/company/presentation/cubit/company_state.dart';
 
 class CompaniesPage extends StatefulWidget {
-  const CompaniesPage({Key? key}) : super(key: key);
+  const CompaniesPage({super.key});
 
   @override
   State<CompaniesPage> createState() => _CompaniesPageState();
@@ -34,8 +37,10 @@ class _CompaniesPageState extends State<CompaniesPage> {
   Future<void> _onRefresh() async {
     final connected = await getIt<NetworkInfo>().isConnected;
     if (!connected) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('لا يوجد اتصال بالإنترنت')),
+      showTopSnackBar(
+        context,
+        message: AppStrings.nointernet.tr,
+        backgroundColor: AppColors.warning,
       );
       return;
     }
@@ -44,144 +49,160 @@ class _CompaniesPageState extends State<CompaniesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.White,
-      body: Column(
-        children: [
-          Expanded(
-            child: BlocConsumer<CompanyCubit, CompanyState>(
-              listener: (context, state) {
-                if (state is CompanyFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state is CompanyLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+    final theme = Theme.of(context);
+    final media = MediaQuery.of(context);
+    final isLandscape = media.orientation == Orientation.landscape;
+    final avatarRadius = media.size.width * (isLandscape ? 0.06 : 0.08);
+    final horizontalPadding = media.size.width * 0.05;
 
-                if (state is CompanySuccess) {
-                  final list = state.companies;
-                  if (list.isEmpty) {
-                    return const Center(child: Text('لا توجد شركات متاحة.'));
-                  }
-                  return RefreshIndicator(
-                    onRefresh: _onRefresh,
-                    child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      itemCount: list.length,
-                      itemBuilder: (_, i) {
-                        final c = list[i];
-                        // تصحيح مسار الشعار ليشمل الـ baseUrl
-                        final rawLogo = c.logo;
-                        final logoUrl = rawLogo.startsWith('http')
-                            ? rawLogo
-                            : '${EndPoint.baseUrl}$rawLogo';
+    // لضبط شريط الحالة
+    final overlay = SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: AppColors.backgroundColorAppBar,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    );
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          child: InkWell(
-                            onTap: () {
-                              CacheHelper().saveData(
-                                key: ApiKey.xSchema,
-                                value: c.schemaName,
-                              );
-
-                              customNavigat(context, '/invoices', extra: {
-                                'companyName': c.companyName,
-                                'companyImag': logoUrl,
-                              });
-                              // GoRouter.of(context).push('/invoices');
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(14),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 8,
-                                    spreadRadius: 2,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.all(12),
-                                leading: CircleAvatar(
-                                  radius: 28,
-                                  backgroundColor: Colors.grey.shade200,
-                                  backgroundImage: NetworkImage(logoUrl),
-                                ),
-                                title: Text(
-                                  c.companyName,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  c.active == 'false'
-                                      ? AppStrings.active
-                                      : AppStrings.inactive,
-                                  style: TextStyle(
-                                    color: c.active == 'false'
-                                        ? Colors.green
-                                        : Colors.red,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                trailing: Icon(
-                                  c.active == 'false'
-                                      ? Icons.check_circle
-                                      : Icons.cancel,
-                                  color: c.active == 'false'
-                                      ? Colors.green
-                                      : Colors.red,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: overlay,
+      child: RefreshIndicator(
+        onRefresh: _onRefresh,
+        backgroundColor: AppColors.primaryBackgroundColor!,
+        color: AppColors.primaryColor,
+        child: BlocConsumer<CompanyCubit, CompanyState>(
+          listener: (context, state) {
+            if (state is CompanyFailure) {
+              showTopSnackBar(
+                context,
+                message: state.message,
+                backgroundColor: AppColors.error,
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is CompanyLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryColor,
+                ),
+              );
+            }
+            if (state is CompanyFailure) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.wifi_off, size: 64, color: AppColors.error),
+                    const SizedBox(height: 16),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium,
                     ),
-                  );
-                }
-
-                // في حالة الخطأ والـ cache خالٍ
-                if (state is CompanyFailure) {
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.wifi_off,
-                            size: 64, color: Colors.grey),
-                        const SizedBox(height: 16),
-                        Text(state.message, textAlign: TextAlign.center),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _onRefresh,
-                          child: const Text('إعادة المحاولة'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _onRefresh,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.container1Color,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ],
+                      ),
+                      child: Text(
+                        AppStrings.retry.tr,
+                        style: theme.textTheme.labelLarge!
+                            .copyWith(color: AppColors.deepBrown),
+                      ),
                     ),
-                  );
-                }
+                  ],
+                ),
+              );
+            }
+            final list = (state as CompanySuccess).companies;
+            if (list.isEmpty) {
+              return Center(
+                child: Text(
+                  AppStrings.noCompanies.tr,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              );
+            }
+            return ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              itemCount: list.length,
+              itemBuilder: (_, i) {
+                final c = list[i];
+                final rawLogo = c.logo;
+                final logoUrl = rawLogo.startsWith('http')
+                    ? rawLogo
+                    : '${EndPoint.baseUrl}$rawLogo';
+                final isActive = c.active == 'false';
 
-                return const SizedBox.shrink();
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding, vertical: 8),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(14),
+                    onTap: () {
+                      CacheHelper().saveData(
+                        key: ApiKey.xSchema,
+                        value: c.schemaName,
+                      );
+                      customNavigat(
+                        context,
+                        '/invoices',
+                        extra: {
+                          'companyName': c.companyName,
+                          'companyImag': logoUrl,
+                        },
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.containerColor,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 8,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(12),
+                        leading: CircleAvatar(
+                          radius: avatarRadius,
+                          backgroundColor: AppColors.lightGrey,
+                          backgroundImage: NetworkImage(logoUrl),
+                        ),
+                        title: Text(
+                          c.companyName,
+                          style: theme.textTheme.titleMedium!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          isActive
+                              ? AppStrings.active.tr
+                              : AppStrings.inactive.tr,
+                          style: theme.textTheme.bodySmall!.copyWith(
+                            color: isActive ? AppColors.success : AppColors.error,
+                          ),
+                        ),
+                        trailing: Icon(
+                          isActive ? Icons.check_circle : Icons.cancel,
+                          color: isActive ? AppColors.success : AppColors.error,
+                          size: avatarRadius,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
               },
-            ),
-          ),
-
-          // شريط التنقل السفلي
-          // NavigationBarItems(
-          //   selectedIndex: 1,
-          //   showBarcode: true,
-          // ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }

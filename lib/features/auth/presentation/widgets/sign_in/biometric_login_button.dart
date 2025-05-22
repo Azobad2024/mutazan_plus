@@ -8,6 +8,7 @@ import 'package:mutazan_plus/core/functions/navigation.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:mutazan_plus/features/auth/biometric/BiometricAuthPresenter.dart';
 import 'package:mutazan_plus/features/auth/biometric/BiometricAuthService.dart';
+import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
 
 class BiometricLoginButton extends StatefulWidget {
   const BiometricLoginButton({super.key});
@@ -42,9 +43,12 @@ class _BiometricLoginButtonState extends State<BiometricLoginButton> {
     // إذا حُذفت بيانات الدخول من الكاش بين المحاولات
     final token = CacheHelper().getData(key: ApiKey.access);
     if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppStrings.loginFirst)),
+      showTopSnackBar(
+        context,
+        message: AppStrings.loginFirst.tr,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       );
+
       return;
     }
 
@@ -53,8 +57,10 @@ class _BiometricLoginButtonState extends State<BiometricLoginButton> {
       // التنقل للصفحة الرئيسية مع الاحتفاظ بسجلّ الدخول
       customReplacementNavigate(context, '/homeView');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('biometricAuthFailed'.tr)),
+      showTopSnackBar(
+        context,
+        message: AppStrings.biometricAuthFailed.tr,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       );
     }
   }
@@ -69,13 +75,17 @@ class _BiometricLoginButtonState extends State<BiometricLoginButton> {
       child: TextButton.icon(
         onPressed: _onPressed,
         icon: const Icon(Icons.fingerprint),
-        label: Text('useFingerprint'.tr),
+        label: Text(
+          'useFingerprint'.tr,
+          style: TextStyle(color: Colors.lightBlue),
+        ),
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.lightBlue,
+        ),
       ),
     );
   }
 }
-
-
 
 // // biometric_login_button.dart
 

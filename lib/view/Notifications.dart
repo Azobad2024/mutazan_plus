@@ -7,7 +7,7 @@ import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
 import 'package:mutazan_plus/core/widgets/custom_navbar.dart';
 
 class Notifications extends StatefulWidget {
-  const Notifications({Key? key}) : super(key: key);
+  const Notifications({super.key});
 
   @override
   State<Notifications> createState() => _NotificationsState();
@@ -42,111 +42,108 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => NavCubit(), // أو HomeCubit حسب البلوك الذي تستخدمه
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundColor,
-          automaticallyImplyLeading: false,
-          title: Text(
-            'notifications'.tr,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'notifications'.tr,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
           ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.delete_sweep, color: Colors.white),
-              onPressed: () => setState(() => notifications.clear()),
-            )
-          ],
         ),
-
-        // بدل body مباشرة، نلفّها داخل ContainerRadius
-        body: SafeArea(
-          child: ContainerRadius(
-            child: notifications.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.notifications_off,
-                            size: 64, color: Colors.grey),
-                        const SizedBox(height: 16),
-                        Text('noNotifications'.tr,
-                            style: const TextStyle(
-                                fontSize: 18, color: Colors.grey)),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    itemCount: notifications.length,
-                    itemBuilder: (context, i) {
-                      final n = notifications[i];
-                      return Dismissible(
-                        key: ValueKey(n.time.toIso8601String()),
-                        background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: const Icon(Icons.delete, color: Colors.white),
-                        ),
-                        onDismissed: (_) =>
-                            setState(() => notifications.removeAt(i)),
-                        child: Card(
-                          elevation: n.isRead ? 1 : 4,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor:
-                                  n.isRead ? Colors.grey : Colors.blue,
-                              child: const Icon(Icons.notifications,
-                                  color: Colors.white),
-                            ),
-                            title: Text(
-                              n.title,
-                              style: TextStyle(
-                                fontWeight: n.isRead
-                                    ? FontWeight.normal
-                                    : FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(n.message),
-                                const SizedBox(height: 4),
-                                Text(_formatTime(n.time),
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.grey)),
-                              ],
-                            ),
-                            onTap: () => setState(() => n.isRead = true),
-                          ),
-                        ),
-                      );
-                    },
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_sweep, color: Colors.white),
+            onPressed: () => setState(() => notifications.clear()),
+          )
+        ],
+      ),
+    
+      // بدل body مباشرة، نلفّها داخل ContainerRadius
+      body: SafeArea(
+        child: ContainerRadius(
+          child: notifications.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.notifications_off,
+                          size: 64, color: Colors.grey),
+                      const SizedBox(height: 16),
+                      Text('noNotifications'.tr,
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.grey)),
+                    ],
                   ),
-          ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  itemCount: notifications.length,
+                  itemBuilder: (context, i) {
+                    final n = notifications[i];
+                    return Dismissible(
+                      key: ValueKey(n.time.toIso8601String()),
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      onDismissed: (_) =>
+                          setState(() => notifications.removeAt(i)),
+                      child: Card(
+                        elevation: n.isRead ? 1 : 4,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                n.isRead ? Colors.grey : Colors.blue,
+                            child: const Icon(Icons.notifications,
+                                color: Colors.white),
+                          ),
+                          title: Text(
+                            n.title,
+                            style: TextStyle(
+                              fontWeight: n.isRead
+                                  ? FontWeight.normal
+                                  : FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(n.message),
+                              const SizedBox(height: 4),
+                              Text(_formatTime(n.time),
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey)),
+                            ],
+                          ),
+                          onTap: () => setState(() => n.isRead = true),
+                        ),
+                      ),
+                    );
+                  },
+                ),
         ),
-
-        bottomNavigationBar: BlocBuilder<NavCubit, int>(
-          builder: (context, selectedIndex) {
-            return Container(
-              color: AppColors.White,
-              // padding: const EdgeInsets.symmetric(vertical: 8),
-              child: NavigationBarItems(
-                showBarcode: false,
-              ),
-            );
-          },
-        ),
+      ),
+    
+      bottomNavigationBar: BlocBuilder<NavCubit, int>(
+        builder: (context, selectedIndex) {
+          return Container(
+            color:Theme.of(context).canvasColor,
+            // padding: const EdgeInsets.symmetric(vertical: 8),
+            child: NavigationBarItems(
+              showBarcode: false,
+            ),
+          );
+        },
       ),
     );
   }

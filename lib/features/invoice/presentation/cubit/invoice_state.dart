@@ -32,31 +32,3 @@ class InvoiceActionFailure    extends InvoiceState {
   InvoiceActionFailure(this.message);
   @override List<Object?> get props => [message];
 }
-
-
-
-// import 'package:equatable/equatable.dart';
-// import '../../domain/entities/invoice_entity.dart';
-
-// abstract class InvoiceState extends Equatable {
-//   @override
-//   List<Object?> get props => [];
-// }
-
-// class InvoiceInitial extends InvoiceState {}
-
-// class InvoiceLoading extends InvoiceState {}
-
-// class InvoiceSuccess extends InvoiceState {
-//   final List<InvoiceEntity> invoices;
-//   InvoiceSuccess(this.invoices);
-//   @override
-//   List<Object?> get props => [invoices];
-// }
-
-// class InvoiceFailure extends InvoiceState {
-//   final String message;
-//   InvoiceFailure(this.message);
-//   @override
-//   List<Object?> get props => [message];
-// }

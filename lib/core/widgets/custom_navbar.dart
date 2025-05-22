@@ -1,12 +1,14 @@
-// lib/features/home/presentation/widgets/navigation_bar_items.dart
+
+
+
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mutazan_plus/core/functions/navigation.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
-import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart'; // تأكد من المسار
+import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
 
 class NavigationBarItems extends StatelessWidget {
   final bool showBarcode;
@@ -56,7 +58,7 @@ class NavigationBarItems extends StatelessWidget {
             if (showBarcode)
               Positioned(
                 top: -35,
-                child: _buildBarcodeButton(),
+                child: _buildBarcodeButton(context),
               ),
           ],
         );
@@ -66,69 +68,88 @@ class NavigationBarItems extends StatelessWidget {
 
   Widget _buildNavItem(BuildContext context, String iconPath, String label,
       int idx, int selectedIndex) {
+    final theme = Theme.of(context);
+    final primary = AppColors.info;
+    final unselected = AppColors.grey;
+
     final isSelected = idx == selectedIndex;
+
     return InkWell(
       onTap: () {
-        // حدّث الحالة في Cubit
         context.read<NavCubit>().changeTab(idx);
-        // ثم ركّب المسار
         final route = _getRoute(idx);
         customNavigat(context, route);
       },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            iconPath,
-            width: 24,
-            height: 24,
-            color: isSelected ? Colors.blue : Colors.grey,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.blue : Colors.grey,
-              fontSize: 12,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      splashColor: primary.withOpacity(0.3),
+      borderRadius: BorderRadius.circular(16),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? primary.withOpacity(0.15) : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // أيقونة قابلة للتكبير
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: isSelected ? 1.0 : 0.8, end: isSelected ? 1.0 : 0.8),
+              duration: const Duration(milliseconds: 250),
+              builder: (context, scale, child) => Transform.scale(
+                scale: scale,
+                child: child,
+              ),
+              child: Image.asset(
+                iconPath,
+                width: 28,
+                height: 28,
+                color: isSelected ? primary : unselected,
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 4),
+
+            // نص متغير
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 250),
+              style: theme.textTheme.labelSmall!.copyWith(
+                color: isSelected ? primary : unselected,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+              child: Text(label),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildBarcodeButton() {
-    return Column(
-      children: [
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: const [
-              BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 2),
-            ],
-          ),
-          alignment: Alignment.center,
-          child: Container(
-            width: 55,
-            height: 55,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: Colors.blueGrey, width: 3),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.qr_code, size: 35, color: Colors.blueGrey),
-              onPressed: () {
-                // تعامل مع الباركود
-              },
-            ),
-          ),
+  Widget _buildBarcodeButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // تعامل مع الباركود
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [
+            BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 2),
+          ],
         ),
-      ],
+        child: Container(
+          margin: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.deepGrey, width: 2),
+          ),
+          child: Icon(Icons.qr_code, size: 32, color: AppColors.deepGrey),
+        ),
+      ),
     );
   }
 
@@ -147,6 +168,27 @@ class NavigationBarItems extends StatelessWidget {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';

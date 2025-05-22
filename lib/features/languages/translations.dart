@@ -29,7 +29,8 @@ class AppTranslations extends Translations {
           'netWeight': 'الوزن الصافي',
           'material': 'المادة',
           'verified': 'تم التحقق',
-          'confirmInvoice': 'هل الفاتورة صحيحة؟',
+          'confirmInvoice': 'الفاتورة صحيحة',
+          'reportViolation': 'الفاتورة غير صحيحة',
           'confirmInvoiceMessage':
               'عند تأكيد صحة الفاتورة سيتم وضع علامة التحقق عليها.',
           'incorrect': 'خاطئة',

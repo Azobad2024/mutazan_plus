@@ -17,7 +17,6 @@ import 'package:mutazan_plus/features/invoice/data/datasources/invoice_remote_da
 import 'package:mutazan_plus/features/invoice/data/repositories/invoice_repository_impl.dart';
 import 'package:mutazan_plus/features/invoice/domain/repositories/invoice_repository.dart';
 import 'package:mutazan_plus/features/invoice/domain/usecases/get_invoices.dart';
-import 'package:mutazan_plus/features/invoice/domain/usecases/report_invoice.dart';
 import 'package:mutazan_plus/features/invoice/domain/usecases/verify_invoice.dart';
 import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_cubit.dart';
 
@@ -79,15 +78,15 @@ void setupServiceLocator() {
     ),
   );
 
-  getIt.registerLazySingleton<ReportInvoice>(
-    () => ReportInvoice(getIt<InvoiceRepository>()),
-  );
+  // getIt.registerLazySingleton<ReportInvoice>(
+  //   () => ReportInvoice(getIt<InvoiceRepository>()),
+  // );
  
   getIt.registerFactory<InvoiceCubit>(
     () => InvoiceCubit(
       getInvoices: getIt<GetInvoices>(),
       verifyInvoiceUseCase: getIt<VerifyInvoice>(),
-      reportInvoiceUseCase: getIt<ReportInvoice>(),
+      // reportInvoiceUseCase: getIt<ReportInvoice>(),
     ),
   );
 }

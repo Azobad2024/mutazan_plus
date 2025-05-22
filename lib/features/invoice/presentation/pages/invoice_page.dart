@@ -2,31 +2,31 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-
-import 'package:mutazan_plus/core/connection/network_info.dart';
-import 'package:mutazan_plus/core/databases/api/end_points.dart';
-import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
 import 'package:mutazan_plus/core/utils/app_assets.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
-import 'package:mutazan_plus/core/services/services_locator.dart';
-import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
-
+import 'package:mutazan_plus/core/widgets/custom_navbar.dart';
+import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
 import 'package:mutazan_plus/features/invoice/domain/entities/invoice_entity.dart';
 import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_cubit.dart';
 import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_state.dart';
-
-import 'package:mutazan_plus/core/widgets/custom_navbar.dart';
+import 'package:mutazan_plus/features/invoice/presentation/widgets/invoice_card.dart';
+import '../../../../core/connection/network_info.dart';
+import '../../../../core/databases/api/end_points.dart';
+import '../../../../core/databases/cache/cache_helper.dart';
+import '../../../../core/services/services_locator.dart';
+import '../../../../features/home/presentation/cubit/home_cubit.dart';
+import 'package:get/get.dart';
 
 class InvoicesPage extends StatefulWidget {
+  final String companyName;
+  final String companyImag;
+
   const InvoicesPage({
     super.key,
     required this.companyName,
     required this.companyImag,
   });
-  final String companyName;
-  final String companyImag;
 
   @override
   State<InvoicesPage> createState() => _InvoicesPageState();
@@ -41,23 +41,12 @@ class _InvoicesPageState extends State<InvoicesPage> {
   List<InvoiceEntity> _all = [];
   List<InvoiceEntity> _filtered = [];
   final Set<int> _verifiedIds = {};
-  final Map<int, int> _reportedViolations = {};
-
-  final List<Map<String, dynamic>> _violations = [
-    {'id': 1, 'name': 'عكس مسار'},
-    {'id': 2, 'name': 'خروج بغير لوحة'},
-    {'id': 3, 'name': 'عدم وجود بطاقة وزن أولى'},
-    {'id': 4, 'name': 'تجاوز الوزن القانوني'},
-    {'id': 5, 'name': 'بيانات غير مكتملة'},
-    {'id': 6, 'name': 'فاتورة غير صحيحة'},
-  ];
 
   @override
   void initState() {
     super.initState();
     final xSchema = CacheHelper().getData(key: ApiKey.xSchema) as String;
     _cubit = getIt<InvoiceCubit>()..fetchInvoices(xSchema);
-
     _searchController = TextEditingController()..addListener(_onSearchChanged);
     _searchFocus = FocusNode();
   }
@@ -77,47 +66,92 @@ class _InvoicesPageState extends State<InvoicesPage> {
       _filtered = q.isEmpty
           ? List.from(_all)
           : _all.where((inv) {
-              final mat = inv.material.toString().toLowerCase();
-              final id = inv.id.toString();
-              return mat.contains(q) || id.contains(q);
+              return inv.material.toString().toLowerCase().contains(q) ||
+                  inv.id.toString().contains(q);
             }).toList();
     });
   }
 
   Future<void> _onRefresh() async {
-    final networkInfo = getIt<NetworkInfo>();
-    if (!await networkInfo.isConnected) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('لا يوجد اتصال بالإنترنت')),
+    final net = getIt<NetworkInfo>();
+    if (!await net.isConnected) {
+      showTopSnackBar(
+        context,
+        message: AppStrings.nointernet.tr,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
       );
+
       return;
     }
     final xSchema = CacheHelper().getData(key: ApiKey.xSchema) as String;
     await _cubit.fetchInvoices(xSchema);
   }
 
-  // =====================================================
-  // عرض خيارات التحقق أو الإبلاغ
-  void _showOptionsDialog(InvoiceEntity inv) {
+  void _showVerifyDialog(InvoiceEntity inv) {
+    if (_verifiedIds.contains(inv.id)) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            AppStrings.alreadyVerified.tr,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          content: Text(AppStrings.alreadyBody.tr),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(AppStrings.ok.tr),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: Text(AppStrings.invoiceOptions.tr),
-        content: Text(AppStrings.chooseOption.tr),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.check_circle, color: AppColors.success, size: 28),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                AppStrings.confirmInvoice.tr,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          AppStrings.bodyverifyInvoice.tr,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _verifyInvoice(inv.id);
-            },
-            child: Text(AppStrings.confirmInvoice.tr),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _showReportDialog(inv.id);
-            },
-            child: Text(AppStrings.reportViolation.tr),
+          Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.success,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                minimumSize: Size(
+                  MediaQuery.of(context).size.width * 0.4,
+                  44,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                _verifyInvoice(inv.id);
+              },
+              child: Text(AppStrings.yesConfirm.tr),
+            ),
           ),
         ],
       ),
@@ -131,49 +165,21 @@ class _InvoicesPageState extends State<InvoicesPage> {
           .showSnackBar(SnackBar(content: Text(f.errMessage))),
       (_) => setState(() {
         _verifiedIds.add(id);
+
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(AppStrings.invoiceVerified.tr)));
+          SnackBar(content: Text(AppStrings.invoiceVerified.tr)),
+        );
       }),
     );
   }
 
-  void _showReportDialog(int id) {
-    showDialog<int>(
-      context: context,
-      builder: (_) => SimpleDialog(
-        title: Text(AppStrings.selectViolationType.tr),
-        children: _violations.map((v) {
-          return SimpleDialogOption(
-            child: Text(v['name'] as String),
-            onPressed: () => Navigator.pop(context, v['id'] as int),
-          );
-        }).toList(),
-      ),
-    ).then((violationId) {
-      if (violationId != null) {
-        _reportInvoice(id, violationId);
-      }
-    });
-  }
-
-  void _reportInvoice(int id, int violationId) async {
-    final res = await _cubit.report(id, violationId);
-    res.fold(
-      (f) => ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(f.errMessage))),
-      (_) => setState(() {
-        _reportedViolations[id] = violationId;
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(AppStrings.violationReported.tr)));
-      }),
-    );
-  }
-
-  // =====================================================
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final theme = Theme.of(context);
     return BlocProvider<NavCubit>(
-      create: (_) => NavCubit(), // NavCubit المسؤول عن تحديث selectedIndex
+      create: (_) => NavCubit(),
       child: BlocConsumer<InvoiceCubit, InvoiceState>(
         bloc: _cubit,
         listener: (ctx, state) {
@@ -187,6 +193,10 @@ class _InvoicesPageState extends State<InvoicesPage> {
           }
         },
         builder: (ctx, state) {
+          final imageProvider = widget.companyImag.isNotEmpty
+              ? NetworkImage(widget.companyImag)
+              : const AssetImage(Assets.imagesAvatar) as ImageProvider;
+
           return GestureDetector(
             onTap: () {
               if (_isSearching) {
@@ -195,32 +205,45 @@ class _InvoicesPageState extends State<InvoicesPage> {
               }
             },
             child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: AppColors.backgroundColor,
+              backgroundColor: theme.colorScheme.background,
               appBar: AppBar(
-                backgroundColor: AppColors.backgroundColor,
+                backgroundColor: AppColors.backgroundColorAppBar,
                 elevation: 0,
-                title: Text(widget.companyName,
-                    style: const TextStyle(color: Colors.white)),
+                titleSpacing: 0,
+                title: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: CircleAvatar(
+                        radius: isLandscape ? 20 : 18,
+                        backgroundImage: imageProvider,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        widget.companyName,
+                        style: theme.textTheme.headlineSmall!
+                            .copyWith(color: Colors.white),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
                 actions: [
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
                     child: _isSearching
-                        ? _buildSearchField()
-                        : _buildSearchButton(),
+                        ? _buildSearchField(theme)
+                        : _buildSearchButton(theme),
                   ),
                   const SizedBox(width: 12),
                 ],
               ),
-              body: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(30)),
-                ),
+              body: SafeArea(
+                bottom: false,
                 child: Column(
                   children: [
-                    _buildHeader(),
+                    _buildHeader(theme, isLandscape),
                     Expanded(child: _buildBody(state)),
                   ],
                 ),
@@ -228,12 +251,8 @@ class _InvoicesPageState extends State<InvoicesPage> {
               bottomNavigationBar: BlocBuilder<NavCubit, int>(
                 builder: (context, selectedIndex) {
                   return Container(
-                    color: AppColors.White,
-                    child: NavigationBarItems(
-                      // selectedIndex: selectedIndex,
-                      showBarcode: true,
-                    ),
-                  );
+                      color: Theme.of(context).canvasColor,
+                      child: NavigationBarItems(showBarcode: false));
                 },
               ),
             ),
@@ -243,51 +262,63 @@ class _InvoicesPageState extends State<InvoicesPage> {
     );
   }
 
-  // =====================================================
-  Widget _buildSearchButton() => InkWell(
+  Widget _buildSearchButton(ThemeData theme) => InkWell(
         onTap: () {
           setState(() => _isSearching = true);
+          // بعد فتح الحقل نطلب التركيز عليه
           Future.delayed(const Duration(milliseconds: 100), () {
             FocusScope.of(context).requestFocus(_searchFocus);
           });
         },
         child: Row(
-          children: const [
-            Text('بحث', style: TextStyle(color: Colors.white)),
-            SizedBox(width: 5),
-            Icon(Icons.search, color: Colors.white),
+          children: [
+            Icon(Icons.search, color: theme.colorScheme.onPrimary),
+            const SizedBox(width: 4),
+            Text(
+              AppStrings.search.tr, // كلمة "بحث"
+              style: theme.textTheme.bodyMedium!
+                  .copyWith(color: theme.colorScheme.onPrimary),
+            ),
           ],
         ),
       );
 
-  Widget _buildSearchField() => Container(
-        width: MediaQuery.of(context).size.width * 0.5,
-        height: 40,
+  Widget _buildSearchField(ThemeData theme) => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        width: MediaQuery.of(context).size.width * 0.6,
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          color: AppColors.containerColor,
+          borderRadius: BorderRadius.circular(15),
+        ),
         child: TextField(
           controller: _searchController,
           focusNode: _searchFocus,
+          autofocus: true, // يفتح الكيبورد تلقائيًا
+          textAlign: TextAlign.center, // لمحاذاة أفقية
+          textAlignVertical: TextAlignVertical.center, // لمحاذاة عمودية
+          style: theme.textTheme.bodyLarge,
           decoration: InputDecoration(
+            prefixIcon:
+                Icon(Icons.search, color: theme.colorScheme.onBackground),
             hintText: AppStrings.searchHint.tr,
+            hintStyle: theme.textTheme.bodyMedium,
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+            isDense: true,
           ),
         ),
       );
 
-  // =====================================================
-  Widget _buildHeader() {
+  Widget _buildHeader(ThemeData theme, bool isLandscape) {
     final count = _filtered.length;
-    // استخدم الصورة الممرّرة مباشرة من الــ widget
-    final imageProvider = widget.companyImag.isNotEmpty
-        ? NetworkImage(widget.companyImag)
-        : const AssetImage(Assets.imagesAvatar) as ImageProvider;
-
     return Container(
-      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        vertical: isLandscape ? 12 : 16,
+        horizontal: 16,
+      ),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: AppColors.containerColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
         boxShadow: const [
           BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 2))
@@ -295,25 +326,32 @@ class _InvoicesPageState extends State<InvoicesPage> {
       ),
       child: Row(
         children: [
-          _statColumn(AppStrings.numberOfInvoices.tr, count.toString()),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppStrings.numberOfInvoices.tr,
+                style: theme.textTheme.bodySmall,
+              ),
+              Text(
+                '$count',
+                style: theme.textTheme.headlineMedium!
+                    .copyWith(color: AppColors.primaryColor),
+              ),
+            ],
+          ),
           const Spacer(),
-          CircleAvatar(radius: 30, backgroundImage: imageProvider),
+          IconButton(
+            icon: Icon(Icons.report, color: AppColors.error, size: 32),
+            onPressed: () {
+              // إضافة مخالفة
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _statColumn(String label, String value) => Column(
-        children: [
-          Text(label, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 4),
-          Text(value,
-              style:
-                  const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        ],
-      );
-
-  // =====================================================
   Widget _buildBody(InvoiceState state) {
     if (state is InvoiceLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -323,229 +361,46 @@ class _InvoicesPageState extends State<InvoicesPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error, size: 64, color: Colors.red[300]),
+            Icon(Icons.error, size: 64, color: AppColors.error),
             const SizedBox(height: 16),
             Text(state.message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _onRefresh, child: const Text('إعادة المحاولة')),
+              onPressed: _onRefresh,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+              ),
+              child: Text(AppStrings.retry.tr),
+            ),
           ],
         ),
       );
     }
-    // success
     return RefreshIndicator(
+      backgroundColor: AppColors.primaryBackground,
+      color: AppColors.primaryColor,
       onRefresh: _onRefresh,
       child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.zero,
         itemCount: _filtered.length,
         itemBuilder: (_, i) {
           final inv = _filtered[i];
           final isVerified = _verifiedIds.contains(inv.id);
-          final reportedType = _reportedViolations[inv.id];
-          return InvoiceCard(
-            invoiceNumber: inv.id.toString(),
-            date: inv.datetime.toString(),
-            quantity: inv.quantity,
-            material: inv.material.toString(),
-            netWeight: inv.netWeight,
-            isVerified: isVerified,
-            reportedViolation: reportedType,
-            onTap: () => _showOptionsDialog(inv),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: InvoiceCard(
+              invoiceNumber: inv.id.toString(),
+              date: inv.datetime.toString(),
+              quantity: inv.quantity,
+              material: inv.material.toString(),
+              netWeight: inv.netWeight,
+              isVerified: isVerified,
+              onTap: () => _showVerifyDialog(inv),
+            ),
           );
         },
       ),
     );
   }
 }
-
-// ---------------------------------------------------
-
-class InvoiceCard extends StatelessWidget {
-  final String invoiceNumber, date, quantity, material, netWeight;
-  final bool isVerified;
-  final int? reportedViolation;
-  final VoidCallback onTap;
-
-  const InvoiceCard({
-    super.key,
-    required this.invoiceNumber,
-    required this.date,
-    required this.quantity,
-    required this.material,
-    required this.netWeight,
-    required this.isVerified,
-    this.reportedViolation,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Color borderColor = Colors.blueGrey;
-    Widget statusWidget = const SizedBox.shrink();
-
-    if (isVerified) {
-      borderColor = Colors.green;
-      statusWidget = const Icon(Icons.verified, color: Colors.green, size: 28);
-    } else if (reportedViolation != null) {
-      borderColor = Colors.red;
-      statusWidget = const Icon(Icons.report, color: Colors.red, size: 28);
-    }
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: borderColor, width: 2),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 4))
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child:
-                      Icon(Icons.menu_book, color: Colors.blueGrey, size: 28),
-                ),
-                Expanded(child: Container(height: 1, color: Colors.blueGrey)),
-                statusWidget,
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                    child: InvoiceLabel(
-                        title: AppStrings.invoiceNumber.tr,
-                        value: invoiceNumber)),
-                const SizedBox(width: 8),
-                Expanded(
-                    child: InvoiceLabel(
-                        title: AppStrings.quantity.tr, value: quantity)),
-                const SizedBox(width: 8),
-                Expanded(
-                    child: InvoiceLabel(
-                        title: AppStrings.date.tr, value: date, isDate: true)),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                    child: InvoiceLabel(
-                        title: AppStrings.netWeight.tr, value: netWeight)),
-                const SizedBox(width: 8),
-                Expanded(
-                    child: InvoiceLabel(
-                        title: AppStrings.material.tr, value: material)),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class InvoiceLabel extends StatelessWidget {
-  final String title, value;
-  final bool isDate;
-  const InvoiceLabel({
-    super.key,
-    required this.title,
-    required this.value,
-    this.isDate = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blueGrey),
-          borderRadius: BorderRadius.circular(8)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title,
-              style: const TextStyle(fontSize: 12, color: Colors.black54)),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: isDate ? Colors.blue : Colors.black),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// // lib/features/invoice/presentation/pages/invoices_page.dart
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:mutazan_plus/core/databases/api/end_points.dart';
-// import 'package:mutazan_plus/core/services/services_locator.dart';
-// import 'package:mutazan_plus/core/utils/app_strings.dart';
-// import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
-// import '../cubit/invoice_cubit.dart';
-// import '../cubit/invoice_state.dart';
-
-// class InvoicesPage extends StatelessWidget {
-//   const InvoicesPage({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // اقرأ x-schema من الكاش
-//     final xSchema = CacheHelper().getData(key: ApiKey.xSchema) as String;
-//     return BlocProvider<InvoiceCubit>(
-//       create: (_) => getIt<InvoiceCubit>()..fetchInvoices(xSchema),
-//       child: Scaffold(
-//         appBar: AppBar(title: const Text(AppStrings.invoices)),
-//         body: BlocBuilder<InvoiceCubit, InvoiceState>(
-//           builder: (context, state) {
-//             if (state is InvoiceLoading) {
-//               return const Center(child: CircularProgressIndicator());
-//             }
-//             if (state is InvoiceFailure) {
-//               return Center(child: Text(state.message));
-//             }
-//             if (state is InvoiceSuccess) {
-//               final invoices = state.invoices;
-//               return ListView.builder(
-//                 itemCount: invoices.length,
-//                 itemBuilder: (_, i) {
-//                   final inv = invoices[i];
-//                   return ListTile(
-//                     title: Text('${AppStrings.invoice} #${inv.id}'),
-//                     subtitle: Text(
-//                       '${AppStrings.quantity}: ${inv.quantity}\n'
-//                       '${AppStrings.netWeight}: ${inv.netWeight}\n'
-//                       '${AppStrings.datetime}: ${inv.datetime}',
-//                     ),
-//                   );
-//                 },
-//               );
-//             }
-//             return const SizedBox.shrink();
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }

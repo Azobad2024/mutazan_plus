@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mutazan_plus/core/functions/navigation.dart';
-import '../../../../view/profile_page.dart';
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({super.key});
@@ -12,7 +11,7 @@ class HeaderWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset("assets/images/asd01.png", height: 100),
+          Image.asset("assets/images/asd01.png", height: 100 ),
           GestureDetector(
             onTap: () {
               customNavigat(context, '/profile');

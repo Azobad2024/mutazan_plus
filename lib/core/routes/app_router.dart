@@ -1,6 +1,9 @@
 // router.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mutazan_plus/features/auth/presentation/views/sign_in_view.dart';
+import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
 import 'package:mutazan_plus/features/invoice/presentation/pages/invoice_page.dart';
 import 'package:mutazan_plus/features/on_boarding/presentation/views/on_boarding_view.dart';
 import 'package:mutazan_plus/features/splash/presentation/views/splash_view.dart';
@@ -20,7 +23,15 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const OnBoardingView(),
     ),
     GoRoute(path: "/signIn", builder: (context, state) => const SignInView()),
-    GoRoute(path: '/homeView', builder: (c, s) => const Home()),
+    GoRoute(
+      path: '/homeView',
+      pageBuilder: (context, state) {
+        return MaterialPage(
+          key: state.pageKey,
+          child: const Home(),
+        );
+      },
+    ),
     GoRoute(path: '/companies', builder: (c, s) => const CompanyPage()),
     GoRoute(path: '/profile', builder: (c, s) => const ProfilePage1()),
     GoRoute(path: '/settings', builder: (c, s) => const SettingsPage()),

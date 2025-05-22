@@ -211,7 +211,7 @@ import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
 import 'package:mutazan_plus/features/invoice/domain/entities/invoice_entity.dart';
 import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_cubit.dart';
 import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_state.dart';
-import 'package:mutazan_plus/features/invoice/presentation/pages/invoice_page.dart';
+import 'package:mutazan_plus/features/invoice/presentation/widgets/invoice_card.dart';
 
 enum FilterMode { all, pending }
 
@@ -221,11 +221,11 @@ class FilteredInvoicesPage extends StatefulWidget {
   final FilterMode mode;
 
   const FilteredInvoicesPage({
-    Key? key,
+    super.key,
     required this.companyName,
     required this.companyImag,
     this.mode = FilterMode.all, required showPending,
-  }) : super(key: key);
+  });
 
   @override
   State<FilteredInvoicesPage> createState() => _FilteredInvoicesPageState();
@@ -240,12 +240,7 @@ class _FilteredInvoicesPageState extends State<FilteredInvoicesPage> {
   bool _searching = false;
 
   final _violations = [
-    {'id': 1, 'name': 'عكس مسار'},
-    {'id': 2, 'name': 'خروج بغير لوحة'},
-    {'id': 3, 'name': 'عدم وجود بطاقة وزن أولى'},
-    {'id': 4, 'name': 'تجاوز الوزن القانوني'},
-    {'id': 5, 'name': 'بيانات غير مكتملة'},
-    {'id': 6, 'name': 'فاتورة غير صحيحة'},
+    {'id': 1, 'name': 'فاتورة غير صحيحة'},
   ];
 
   @override
@@ -334,17 +329,17 @@ class _FilteredInvoicesPageState extends State<FilteredInvoicesPage> {
                 ),
               );
               if (pick != null) {
-                _cubit.report(inv.id, pick).then((res) {
-                  res.fold(
-                    (f) => ScaffoldMessenger.of(context)
-                       .showSnackBar(SnackBar(content: Text(f.errMessage))),
-                    (_) {
-                      // علامة مبلّغ عنها لا نستخدمها هنا
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(AppStrings.violationReported.tr)));
-                    }
-                  );
-                });
+                // _cubit.report(inv.id, pick).then((res) {
+                //   res.fold(
+                //     (f) => ScaffoldMessenger.of(context)
+                //        .showSnackBar(SnackBar(content: Text(f.errMessage))),
+                //     (_) {
+                //       // علامة مبلّغ عنها لا نستخدمها هنا
+                //       ScaffoldMessenger.of(context).showSnackBar(
+                //         SnackBar(content: Text(AppStrings.violationReported.tr)));
+                //     }
+                //   );
+                // });
               }
             },
             child: Text(AppStrings.reportViolation.tr),

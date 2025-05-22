@@ -7,16 +7,20 @@ class ContainerRadius extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    // نجلب من الثيم اللون المناسب لخلفية الحاوية
+    final background = Theme.of(context).canvasColor;
+
     return Container(
       // padding: EdgeInsets.all(8),
       height: MediaQuery.of(context).size.height * 0.8,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(60),
           topRight: Radius.circular(60),
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             spreadRadius: 3,
             blurRadius: 8,

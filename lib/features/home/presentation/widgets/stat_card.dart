@@ -1,78 +1,96 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:mutazan_plus/core/utils/app_colors.dart';
-
+import 'package:responsive_framework/responsive_framework.dart';
 
 class StatCard extends StatelessWidget {
   final String title;
   final String value;
   final String assetIcon;
-  final Color iconColor; // إضافة خاصية جديدة للون الأيقونة
-  final double iconRotation; // إضافة خاصية جديدة للدوران
+  final Color iconColor;
+  final double iconRotation;
 
   const StatCard({
     super.key,
     required this.title,
     required this.value,
     required this.assetIcon,
-    required this.iconColor, // تمرير اللون
-    required this.iconRotation, // تمرير اتجاه الأيقونة
+    required this.iconColor,
+    required this.iconRotation,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.4,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 10,
-            offset: const Offset(2, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style:  TextStyle(
-                  fontSize: 16,
-                  color: AppColors.backgroundColor, // اللون هنا يمكن تغييره حسب الحاجة
-                  fontWeight: FontWeight.bold,
+    final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    double getResponsiveFontSize(double base) {
+      if (screenWidth < 400) return base * 0.85;
+      if (screenWidth > 800) return base * 1.15;
+      return base;
+    }
+
+    double getResponsiveIconSize(double base) {
+      if (screenWidth < 400) return base * 0.8;
+      if (screenWidth > 800) return base * 1.25;
+      return base;
+    }
+
+    final verticalPad = ResponsiveValue<double>(
+      context,
+      defaultValue: 8,
+      conditionalValues: const [
+        Condition.largerThan(name: MOBILE, value: 12),
+        Condition.largerThan(name: TABLET, value: 16),
+      ],
+    ).value!;
+
+    final horizontalPad = verticalPad;
+    final iconBaseSize = 28.0;
+    final iconSize = getResponsiveIconSize(iconBaseSize);
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: horizontalPad, vertical: verticalPad),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleSmall!.copyWith(
+                      color: iconColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: getResponsiveFontSize(14),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 5),
-              // إضافة دوران وتحكم في اللون
-              Transform.rotate(
-                angle: iconRotation *
-                    3.14159 /
-                    180, // تحويل الدوران من درجات إلى راديان
-                child: Image.asset(
-                  assetIcon,
-                  width: 24,
-                  height: 24,
-                  color: iconColor, // التحكم في اللون
+                SizedBox(width: verticalPad),
+                Transform.rotate(
+                  angle: iconRotation * math.pi / 180,
+                  child: Image.asset(
+                    assetIcon,
+                    width: iconSize,
+                    height: iconSize,
+                    color: iconColor,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style:  TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColors.backgroundColor,
+              ],
             ),
-          ),
-        ],
+            SizedBox(height: verticalPad * 0.5),
+            Text(
+              value,
+              style: theme.textTheme.headlineSmall!.copyWith(
+                color: iconColor,
+                fontWeight: FontWeight.bold,
+                fontSize: getResponsiveFontSize(20),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

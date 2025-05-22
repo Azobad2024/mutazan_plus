@@ -1,5 +1,6 @@
 class EndPoint {
-  static String baseUrl = "http://192.168.130.209:8000";
+  static String baseUrl = "http://192.168.129.209:8000";
+  // static String baseUrl = "http://192.168.130.162:8000";
   // static String baseUrl = "http://192.168.8.197:8000";
 
   static const String apiPrefix = "/api";
@@ -12,11 +13,12 @@ class EndPoint {
   // الفواتير
   static String invoices = "$apiPrefix/invoices";
   
+  
   // جديد: إبلاغ مخالفة
   static String reportInvoice(int id) => "$apiPrefix/invoices/$id/report/";
   
   // جديد: تأكيد فاتورة
-  static String verifyInvoice(int id) => "$apiPrefix/invoices/$id/verify/";
+  // static String verifyInvoice(int id) => "$apiPrefix/invoices/$id/verify/";
 }
 
 class ApiKey {
