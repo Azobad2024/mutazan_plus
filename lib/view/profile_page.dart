@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:responsive_framework/responsive_framework.dart' as responsive;
 import 'package:mutazan_plus/core/utils/app_colors.dart';
+import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePage1 extends StatefulWidget {
   const ProfilePage1({super.key});
-  // static String routeName = "/ProfilePage1";
 
   @override
   State<ProfilePage1> createState() => _ProfilePage1State();
@@ -13,40 +15,47 @@ class ProfilePage1 extends StatefulWidget {
 
 class _ProfilePage1State extends State<ProfilePage1> {
   File? _imageFile;
-  final ImagePicker _picker = ImagePicker();
+  final _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+    final picked = await _picker.pickImage(source: ImageSource.camera);
+    if (picked != null) {
+      setState(() => _imageFile = File(picked.path));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final height = MediaQuery.of(context).size.height;
+    final avatarRadius = responsive.ResponsiveValue<double>(
+      context,
+      defaultValue: 75,
+      conditionalValues: [
+        responsive.Condition.largerThan(name: responsive.TABLET, value: 100),
+      ],
+    ).value;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundColorAppBar,
-      ),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(backgroundColor: AppColors.container1Color),
       body: SafeArea(
         child: Column(
           children: [
             SizedBox(
-              height: screenHeight * 0.4,
-              child:
-                  _TopPortion(imageFile: _imageFile, onCameraTap: _pickImage),
+              height: height * 0.4,
+              child: _TopPortion(
+                imageFile: _imageFile,
+                onCameraTap: _pickImage,
+                avatarRadius: avatarRadius,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
-              "Abdelazeez Obad",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              'abdelazeez obad', // بالإمكان استبدالها بمتغير للمستخدم
+              style: theme.textTheme.headlineSmall!
+                  .copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             const _UserInfoCard(),
@@ -61,56 +70,64 @@ class _ProfilePage1State extends State<ProfilePage1> {
 class _TopPortion extends StatelessWidget {
   final File? imageFile;
   final VoidCallback onCameraTap;
+  final double avatarRadius;
 
-  const _TopPortion({this.imageFile, required this.onCameraTap});
+  const _TopPortion({
+    this.imageFile,
+    required this.onCameraTap,
+    required this.avatarRadius,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gradient = LinearGradient(
+      begin: Alignment.bottomCenter,
+      end: Alignment.topCenter,
+      colors: [
+        AppColors.backgroundColorAppBar,
+        AppColors.container1Color,
+      ],
+    );
+
     return Stack(
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 50),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [Color(0xff334E68), Color(0xff829AB1)],
-            ),
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            gradient: gradient,
+            borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(50),
               bottomRight: Radius.circular(50),
             ),
           ),
         ),
         Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
+          bottom: 0, left: 0, right: 0,
           child: Center(
             child: Stack(
               children: [
                 CircleAvatar(
-                  radius: 75,
+                  radius: avatarRadius,
                   backgroundImage: imageFile != null
                       ? FileImage(imageFile!)
                       : const AssetImage('assets/images/myProfile.png')
                           as ImageProvider,
                 ),
                 Positioned(
-                  bottom: 0,
-                  right: 0,
+                  bottom: 0, right: 4,
                   child: GestureDetector(
                     onTap: onCameraTap,
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.blue.shade700,
+                        color: theme.colorScheme.secondary,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.camera_alt,
-                        color: Colors.white,
-                        size: 24,
+                        color: theme.colorScheme.onSecondary,
+                        size: avatarRadius * 0.3,
                       ),
                     ),
                   ),
@@ -129,27 +146,40 @@ class _UserInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 4,
-      child: const Padding(
-        padding: EdgeInsets.all(16.0),
+      color: theme.cardColor,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             _UserInfoRow(
-                icon: Icons.person, label: "username", value: "abdelazeez"),
-            Divider(),
+              icon: Icons.person,
+              label: AppStrings.username.tr,
+              value: 'abdelazeez',
+            ),
+            Divider(color: theme.dividerColor),
             _UserInfoRow(
-                icon: Icons.phone, label: "phoneNumber", value: "770571954"),
-            Divider(),
+              icon: Icons.phone,
+              label: AppStrings.phoneNumber.tr,
+              value: '770571954',
+            ),
+            Divider(color: theme.dividerColor),
             _UserInfoRow(
-                icon: Icons.location_on, label: "address", value: "sanaaYemen"),
-            Divider(),
+              icon: Icons.location_on,
+              label: AppStrings.address.tr,
+              value: AppStrings.sanaaYemen.tr,
+            ),
+            Divider(color: theme.dividerColor),
             _UserInfoRow(
-                icon: Icons.email,
-                label: "email",
-                value: "abdelazeez@example.com"),
+              icon: Icons.email,
+              label: AppStrings.email.tr,
+              value: 'abdelazeez@example.com',
+            ),
           ],
         ),
       ),
@@ -162,27 +192,38 @@ class _UserInfoRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const _UserInfoRow(
-      {required this.icon, required this.label, required this.value});
+  const _UserInfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, color: Colors.blue, size: 28),
-        const SizedBox(width: 10),
-        Text(
-          "$label: ",
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        Expanded(
-          child: Text(
-            value,
-            style: const TextStyle(fontSize: 16),
-            overflow: TextOverflow.ellipsis,
+    final theme = Theme.of(context);
+    final iconColor = theme.colorScheme.primary;
+    final textStyle = theme.textTheme.bodyMedium;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor, size: 24),
+          const SizedBox(width: 12),
+          Text(
+            '$label: ',
+            style: textStyle?.copyWith(fontWeight: FontWeight.bold),
           ),
-        ),
-      ],
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value,
+              style: textStyle,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

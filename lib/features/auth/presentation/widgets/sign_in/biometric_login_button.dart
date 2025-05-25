@@ -76,7 +76,7 @@ class _BiometricLoginButtonState extends State<BiometricLoginButton> {
         onPressed: _onPressed,
         icon: const Icon(Icons.fingerprint),
         label: Text(
-          'useFingerprint'.tr,
+          AppStrings.useFingerprint.tr,
           style: TextStyle(color: Colors.lightBlue),
         ),
         style: TextButton.styleFrom(

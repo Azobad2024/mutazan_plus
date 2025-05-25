@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:mutazan_plus/core/functions/navigation.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
+import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
 
 class NavigationBarItems extends StatelessWidget {
@@ -42,13 +43,13 @@ class NavigationBarItems extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildNavItem(context, 'assets/icons/home-agreement.png',
-                        'home'.tr, 0, selectedIndex),
+                        AppStrings.home.tr, 0, selectedIndex),
                     _buildNavItem(context, 'assets/icons/insurance-company.png',
-                        'company'.tr, 1, selectedIndex),
+                        AppStrings.companies.tr, 1, selectedIndex),
                     _buildNavItem(context, 'assets/icons/setting.png',
-                        'settings'.tr, 2, selectedIndex),
+                        AppStrings.settings.tr, 2, selectedIndex),
                     _buildNavItem(context, 'assets/icons/notification.png',
-                        'notifications'.tr, 3, selectedIndex),
+                        AppStrings.notifications.tr, 3, selectedIndex),
                   ],
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:responsive_framework/responsive_framework.dart' as responsive;
 
 class HeaderRowWidget extends StatelessWidget {
@@ -10,7 +11,7 @@ class HeaderRowWidget extends StatelessWidget {
     // paddings مرنة عبر ResponsiveValue
     final horizontalPadding = responsive.ResponsiveValue<double>(
       context,
-      defaultValue: 16.0,
+      defaultValue: 8.0,
       conditionalValues: [
         responsive.Condition.smallerThan(name: responsive.MOBILE, value: 12.0),
         responsive.Condition.largerThan(name: responsive.TABLET, value: 24.0),
@@ -26,7 +27,7 @@ class HeaderRowWidget extends StatelessWidget {
     ).value;
     final dividerHeight = responsive.ResponsiveValue<double>(
       context,
-      defaultValue: 40.0,
+      defaultValue: 35.0,
       conditionalValues: [
         responsive.Condition.largerThan(name: responsive.TABLET, value: 60.0),
       ],
@@ -44,7 +45,7 @@ class HeaderRowWidget extends StatelessWidget {
 
     final theme = Theme.of(context);
     final cardBackground = theme.cardColor;
-    final highlightBackground = theme.colorScheme.primary.withOpacity(0.1);
+    final highlightBackground = theme.colorScheme.primary.withOpacity(0.3);
     final dividerColor = theme.colorScheme.primary;
 
     return Card(
@@ -62,7 +63,7 @@ class HeaderRowWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _HeaderChip(
-              title: 'companies'.tr,
+              title: AppStrings.companies.tr,
               background: highlightBackground,
               fontSize: fontSize,
               padding: EdgeInsets.symmetric(
@@ -76,7 +77,7 @@ class HeaderRowWidget extends StatelessWidget {
               color: dividerColor,
             ),
             _HeaderChip(
-              title: 'status'.tr,
+              title: AppStrings.status.tr,
               background: highlightBackground,
               fontSize: fontSize,
               padding: EdgeInsets.symmetric(

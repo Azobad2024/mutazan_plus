@@ -1,18 +1,26 @@
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+
 import 'package:mutazan_plus/core/connection/network_info.dart';
 import 'package:mutazan_plus/core/databases/api/api_consumer.dart';
 import 'package:mutazan_plus/core/databases/api/dio_consumer.dart';
 import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
+
+// Auth
 import 'package:mutazan_plus/features/auth/data/repositories/user_repository.dart';
 import 'package:mutazan_plus/features/auth/presentation/cubit/user_cubit.dart';
+
+// Company
 import 'package:mutazan_plus/features/company/data/datasources/company_local_data_source.dart';
 import 'package:mutazan_plus/features/company/data/datasources/company_remote_data_source.dart';
 import 'package:mutazan_plus/features/company/data/repositories/company_repository_impl.dart';
 import 'package:mutazan_plus/features/company/domain/repositories/company_repository.dart';
 import 'package:mutazan_plus/features/company/domain/usecases/get_company.dart';
 import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
+
+// Invoice
+import 'package:mutazan_plus/features/invoice/data/datasources/invoice_local_data_source.dart';
 import 'package:mutazan_plus/features/invoice/data/datasources/invoice_remote_data_source.dart';
 import 'package:mutazan_plus/features/invoice/data/repositories/invoice_repository_impl.dart';
 import 'package:mutazan_plus/features/invoice/domain/repositories/invoice_repository.dart';
@@ -23,31 +31,31 @@ import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_cubit.d
 final getIt = GetIt.instance;
 
 void setupServiceLocator() {
-  // Cache
+  // -------- Core & Cache --------
   getIt.registerLazySingleton<CacheHelper>(() => CacheHelper());
-
-  // API
   getIt.registerLazySingleton<ApiConsumer>(() => DioConsumer(dio: Dio()));
-
-  // Repositories
-  getIt.registerLazySingleton<UserRepository>(
-    () => UserRepository(
-        api: getIt<ApiConsumer>(), networkInfo: getIt<NetworkInfo>()),
-  );
-
-  // Cubit / ViewModels
-  getIt.registerFactory<UserCubit>(() => UserCubit(getIt<UserRepository>()));
-
-  // ntwork
   getIt.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(DataConnectionChecker()),
   );
 
-  // // company
+  // -------- Auth --------
+  getIt.registerLazySingleton<UserRepository>(
+    () => UserRepository(
+      api: getIt<ApiConsumer>(),
+      networkInfo: getIt<NetworkInfo>(),
+    ),
+  );
+  getIt.registerFactory<UserCubit>(
+    () => UserCubit(getIt<UserRepository>()),
+  );
+
+  // -------- Company --------
   getIt.registerLazySingleton<CompanyRemoteDataSource>(
-      () => CompanyRemoteDataSource(getIt<ApiConsumer>()));
+    () => CompanyRemoteDataSource(getIt<ApiConsumer>()),
+  );
   getIt.registerLazySingleton<CompanyLocalDataSource>(
-      () => CompanyLocalDataSource(getIt<CacheHelper>()));
+    () => CompanyLocalDataSource(getIt<CacheHelper>()),
+  );
   getIt.registerLazySingleton<CompanyRepository>(
     () => CompanyRepositoryImpl(
       networkInfo: getIt<NetworkInfo>(),
@@ -56,37 +64,41 @@ void setupServiceLocator() {
     ),
   );
   getIt.registerLazySingleton<GetCompanies>(
-      () => GetCompanies(getIt<CompanyRepository>()));
+    () => GetCompanies(getIt<CompanyRepository>()),
+  );
   getIt.registerFactory<CompanyCubit>(
-      () => CompanyCubit(getCompanies: getIt<GetCompanies>()));
-
-  // Invoices
-  getIt.registerLazySingleton<VerifyInvoice>(
-    () => VerifyInvoice(getIt<InvoiceRepository>()),
+    () => CompanyCubit(getCompanies: getIt<GetCompanies>()),
   );
 
+  // -------- Invoice --------
+  // 1. Local data source
+  getIt.registerLazySingleton<InvoiceLocalDataSource>(
+    () => InvoiceLocalDataSource(),
+  );
+  // 2. Remote data source
   getIt.registerLazySingleton<InvoiceRemoteDataSource>(
-      () => InvoiceRemoteDataSource(getIt<ApiConsumer>()));
-  getIt.registerLazySingleton<GetInvoices>(
-    () => GetInvoices(getIt<InvoiceRepository>()),
+    () => InvoiceRemoteDataSource(getIt<ApiConsumer>()),
   );
+  // 3. Repository
   getIt.registerLazySingleton<InvoiceRepository>(
     () => InvoiceRepositoryImpl(
       networkInfo: getIt<NetworkInfo>(),
       remoteDataSource: getIt<InvoiceRemoteDataSource>(),
-      api: getIt<ApiConsumer>(),
+      localDataSource: getIt<InvoiceLocalDataSource>(),
     ),
   );
-
-  // getIt.registerLazySingleton<ReportInvoice>(
-  //   () => ReportInvoice(getIt<InvoiceRepository>()),
-  // );
- 
+  // 4. Use cases
+  getIt.registerLazySingleton<GetInvoices>(
+    () => GetInvoices(getIt<InvoiceRepository>()),
+  );
+  getIt.registerLazySingleton<VerifyInvoice>(
+    () => VerifyInvoice(getIt<InvoiceRepository>()),
+  );
+  // 5. Cubit
   getIt.registerFactory<InvoiceCubit>(
     () => InvoiceCubit(
       getInvoices: getIt<GetInvoices>(),
       verifyInvoiceUseCase: getIt<VerifyInvoice>(),
-      // reportInvoiceUseCase: getIt<ReportInvoice>(),
     ),
   );
 }

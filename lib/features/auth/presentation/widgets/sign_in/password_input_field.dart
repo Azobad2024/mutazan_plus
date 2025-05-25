@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
 import 'package:mutazan_plus/features/auth/presentation/cubit/user_cubit.dart';
@@ -21,7 +22,7 @@ class PasswordInputField extends StatelessWidget {
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'password',
+                AppStrings.password,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
@@ -36,12 +37,12 @@ class PasswordInputField extends StatelessWidget {
                     obscureText: obscure,
                     validator: (v) {
                       if (v == null || v.isEmpty) {
-                        return "Please enter your password.";
+                        return AppStrings.passwordRequired.tr;
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      hintText: AppStrings.password,
+                      hintText: AppStrings.password.tr,
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 14,
                         horizontal: 12,

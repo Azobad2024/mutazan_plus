@@ -1,8 +1,8 @@
-// استيراد الحزم المطلوبة
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:responsive_framework/responsive_framework.dart' as responsive;
 
 import 'package:mutazan_plus/core/connection/network_info.dart';
 import 'package:mutazan_plus/core/databases/api/end_points.dart';
@@ -14,8 +14,8 @@ import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:mutazan_plus/core/widgets/show_top_snack_bar.dart';
 import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
 import 'package:mutazan_plus/features/company/presentation/cubit/company_state.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
-// صفحة عرض الشركات
 class CompaniesPage extends StatefulWidget {
   const CompaniesPage({super.key});
 
@@ -24,60 +24,79 @@ class CompaniesPage extends StatefulWidget {
 }
 
 class _CompaniesPageState extends State<CompaniesPage> {
-  bool _hasFetched = false; // لتفادي استدعاء البيانات أكثر من مرة
+  bool _hasFetched = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // جلب الشركات مرة واحدة عند الدخول لأول مرة
     if (!_hasFetched) {
       context.read<CompanyCubit>().fetchCompanies();
       _hasFetched = true;
     }
   }
 
-  // دالة لتحديث البيانات عند السحب للأسفل
   Future<void> _onRefresh() async {
     final connected = await getIt<NetworkInfo>().isConnected;
-
-    // إظهار رسالة تنبيه إذا لم يوجد اتصال بالإنترنت
     if (!connected) {
       showTopSnackBar(
         context,
-        message: AppStrings.nointernet.tr,
+        message: AppStrings.noInternet.tr,
         backgroundColor: AppColors.warning,
       );
       return;
     }
-
-    // إعادة جلب الشركات من السيرفر
     await context.read<CompanyCubit>().fetchCompanies();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final media = MediaQuery.of(context);
-    final isLandscape = media.orientation == Orientation.landscape;
-    final avatarRadius = media.size.width * (isLandscape ? 0.06 : 0.08);
-    final horizontalPadding = media.size.width * 0.05;
+    final isDark = theme.brightness == Brightness.dark;
 
-    // ضبط شكل شريط الحالة العلوي
     final overlay = SystemUiOverlayStyle.dark.copyWith(
       statusBarColor: AppColors.backgroundColorAppBar,
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.dark,
     );
 
+    // Responsive paddings
+    final horizontalPad = responsive.ResponsiveValue<double>(
+      context,
+      defaultValue: 8,
+      conditionalValues: [
+        responsive.Condition.largerThan(name: MOBILE, value: 24),
+        responsive.Condition.largerThan(name: TABLET, value: 32),
+      ],
+    ).value;
+
+    final verticalPad = responsive.ResponsiveValue<double>(
+      context,
+      defaultValue: 5,
+      conditionalValues: [
+        responsive.Condition.largerThan(name: MOBILE, value: 16),
+        responsive.Condition.largerThan(name: TABLET, value: 24),
+      ],
+    ).value;
+
+    final avatarRadius = ResponsiveValue<double>(
+      context,
+      defaultValue: 32,
+      conditionalValues: [
+        responsive.Condition.largerThan(name: MOBILE, value: 40),
+        responsive.Condition.largerThan(name: TABLET, value: 48),
+      ],
+    ).value;
+
+    final highlightBackground = theme.colorScheme.primary.withOpacity(0.2);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: overlay,
       child: RefreshIndicator(
-        onRefresh: _onRefresh, // عند سحب الشاشة للتحديث
+        onRefresh: _onRefresh,
         backgroundColor: AppColors.primaryBackgroundColor!,
         color: AppColors.primaryColor,
         child: BlocConsumer<CompanyCubit, CompanyState>(
           listener: (context, state) {
-            // إذا حدث خطأ أثناء الجلب يتم عرض تنبيه
             if (state is CompanyFailure) {
               showTopSnackBar(
                 context,
@@ -87,112 +106,80 @@ class _CompaniesPageState extends State<CompaniesPage> {
             }
           },
           builder: (context, state) {
-            // حالة التحميل (جاري تحميل الشركات)
             if (state is CompanyLoading) {
               return Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                ),
+                child: CircularProgressIndicator(color: AppColors.primaryColor),
               );
             }
-
-            // حالة الفشل (خطأ أثناء جلب الشركات)
             if (state is CompanyFailure) {
               return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.wifi_off, size: 64, color: AppColors.error),
-                    const SizedBox(height: 16),
-                    Text(
-                      state.message,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: verticalPad),
+                    Text(state.message,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyMedium),
+                    SizedBox(height: verticalPad),
                     ElevatedButton(
                       onPressed: _onRefresh,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.container1Color,
+                        backgroundColor: AppColors.primaryColor,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                            borderRadius: BorderRadius.circular(8)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       ),
-                      child: Text(
-                        AppStrings.retry.tr,
-                        style: theme.textTheme.labelLarge!
-                            .copyWith(color: AppColors.deepBrown),
-                      ),
+                      child: Text(AppStrings.retry.tr,
+                          style: theme.textTheme.labelLarge!
+                              .copyWith(color: AppColors.buttomColor)),
                     ),
                   ],
                 ),
               );
             }
 
-            // حالة النجاح، وتم جلب قائمة الشركات
             final list = (state as CompanySuccess).companies;
-
-            // إذا لم توجد أي شركة
             if (list.isEmpty) {
               return Center(
-                child: Text(
-                  AppStrings.noCompanies.tr,
-                  style: theme.textTheme.bodyMedium,
-                ),
+                child: Text(AppStrings.noCompanies.tr,
+                    style: theme.textTheme.bodyMedium),
               );
             }
 
-            // عرض الشركات في قائمة قابلة للتمرير
             return ListView.builder(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(vertical: verticalPad),
               itemCount: list.length,
               itemBuilder: (_, i) {
-                final c = list[i]; // شركة واحدة
+                final c = list[i];
                 final rawLogo = c.logo;
-                // ربط شعار الشركة بالرابط الصحيح
                 final logoUrl = rawLogo.startsWith('http')
                     ? rawLogo
                     : '${EndPoint.baseUrl}$rawLogo';
-                // تحديد حالة الشركة نشطة أم لا
                 final isActive = c.active == 'false';
 
                 return Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: horizontalPadding, vertical: 8),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: () {
-                      // عند الضغط يتم حفظ بيانات الشركة المختارة
-                      CacheHelper().saveData(
-                        key: ApiKey.xSchema,
-                        value: c.schemaName,
-                      );
-                      // الانتقال إلى صفحة الفواتير مع تمرير بيانات الشركة
-                      customNavigat(
-                        context,
-                        '/invoices',
-                        extra: {
+                      horizontal: horizontalPad, vertical: verticalPad / 2),
+                  child: Card(
+                    color: isDark ? theme.canvasColor : theme.cardColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    elevation: 4,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () {
+                        CacheHelper()
+                            .saveData(key: ApiKey.xSchema, value: c.schemaName);
+                        customNavigat(context, '/invoices', extra: {
                           'companyName': c.companyName,
                           'companyImag': logoUrl,
-                        },
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.containerColor,
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
+                        });
+                      },
                       child: ListTile(
-                        contentPadding: const EdgeInsets.all(12),
+                        contentPadding: EdgeInsets.all(verticalPad),
                         leading: CircleAvatar(
                           radius: avatarRadius,
                           backgroundColor: AppColors.lightGrey,
@@ -208,8 +195,9 @@ class _CompaniesPageState extends State<CompaniesPage> {
                               ? AppStrings.active.tr
                               : AppStrings.inactive.tr,
                           style: theme.textTheme.bodySmall!.copyWith(
-                            color: isActive ? AppColors.success : AppColors.error,
-                          ),
+                              color: isActive
+                                  ? AppColors.success
+                                  : AppColors.error),
                         ),
                         trailing: Icon(
                           isActive ? Icons.check_circle : Icons.cancel,
@@ -228,8 +216,6 @@ class _CompaniesPageState extends State<CompaniesPage> {
     );
   }
 }
-
-
 
 // // lib/features/company/presentation/pages/companies_page.dart
 

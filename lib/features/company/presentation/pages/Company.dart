@@ -22,7 +22,7 @@ class CompanyPage extends StatelessWidget {
         automaticallyImplyLeading: false,
         centerTitle: true, // لمحاذاة العنوان في المنتصف
         title: Text(
-          AppStrings.companiesTitle.tr,
+          AppStrings.companies.tr,
           style: theme.textTheme.headlineSmall!
               .copyWith(color: Colors.white, fontWeight: FontWeight.w900),
         ),

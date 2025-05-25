@@ -270,7 +270,7 @@ class _FilteredInvoicesPageState extends State<FilteredInvoicesPage> {
     if (q.isNotEmpty) {
       list = list.where((inv) {
         return inv.id.toString().contains(q) ||
-               inv.material.toString().toLowerCase().contains(q);
+               inv.materialName.toString().toLowerCase().contains(q);
       }).toList();
     }
 
@@ -319,7 +319,7 @@ class _FilteredInvoicesPageState extends State<FilteredInvoicesPage> {
               final pick = await showDialog<int>(
                 context: context,
                 builder: (_) => SimpleDialog(
-                  title: Text(AppStrings.selectViolationType.tr),
+                  title: Text(AppStrings.chooseOption.tr),
                   children: _violations.map((v) {
                     return SimpleDialogOption(
                       child: Text(v['name'] as String),
@@ -461,7 +461,7 @@ class _FilteredInvoicesPageState extends State<FilteredInvoicesPage> {
             invoiceNumber: inv.id.toString(),
             date: inv.datetime.toString(),
             quantity: inv.quantity,
-            material: inv.material.toString(),
+            material: inv.materialName.toString(),
             netWeight: inv.netWeight,
             isVerified: inv.isVerified,
             // نمرر onTap فقط:

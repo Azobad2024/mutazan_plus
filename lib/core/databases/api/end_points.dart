@@ -61,4 +61,8 @@ class ApiKey {
   static String quantity = "quantity";
   static String datetime = "datetime";
   static String netWeight = "net_weight";
+  static String materialName = "material_name";
+  static String emptyWeightInv = "empty_weight_inv";
+  static String loadedWeightInv = "loaded_weight_inv";
+  static String invoiceMaterials = "invoice_materials";
 }

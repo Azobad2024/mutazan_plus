@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:mutazan_plus/core/functions/navigation.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:mutazan_plus/core/utils/app_text_styles.dart';
@@ -22,7 +23,7 @@ class GetButtons extends StatelessWidget {
       return Column(
         children: [
           CustomElevatedButton(
-            text: AppStrings.loginNow,
+            text: AppStrings.loginNow.tr,
             onPressed: () {
               onBoardingVisited();
               customReplacementNavigate(context, "/signIn");
@@ -36,7 +37,7 @@ class GetButtons extends StatelessWidget {
               // customReplacementNavigate(context, "/signIn");
             },
             child: Text(
-              AppStrings.createAccount,
+              AppStrings.signUp.tr,
               style: CustomTextStyles.poppins300style16.copyWith(
                 fontWeight: FontWeight.w400,
               ),

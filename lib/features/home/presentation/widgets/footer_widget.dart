@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
+import 'package:mutazan_plus/core/utils/app_strings.dart';
 
 class FooterWidget extends StatelessWidget {
   const FooterWidget({super.key});
@@ -24,7 +25,7 @@ class FooterWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'footerText'.tr,
+            AppStrings.footerText.tr,
             style: theme.textTheme.bodyMedium!.copyWith(
               fontSize: fontSize,
               color: Colors.white,

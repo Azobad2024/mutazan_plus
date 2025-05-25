@@ -1,4 +1,6 @@
 import 'package:mutazan_plus/core/utils/app_assets.dart';
+import 'package:mutazan_plus/core/utils/app_strings.dart';
+import 'package:get/get.dart';
 
 class OnBoardingModel {
   final String imagePath;
@@ -12,22 +14,20 @@ class OnBoardingModel {
   });
 }
 
-List<OnBoardingModel> onBoardingData = [
+final List<OnBoardingModel> onBoardingData = [
   OnBoardingModel(
     imagePath: Assets.imagesOnBoarding1,
-    title: "Explore The history with Dalel in a smart way",
-    subTitle:
-        "Using our app’s history libraries you can find many historical periods ",
+    title:   AppStrings.onboardingTitle1.tr,
+    subTitle:AppStrings.onboardingSubtitle1.tr,
   ),
   OnBoardingModel(
     imagePath: Assets.imagesOnBoarding2,
-    title: "From every place on earth",
-    subTitle: "A big variety of ancient places from all over the world",
+    title:   AppStrings.onboardingTitle2.tr,
+    subTitle:AppStrings.onboardingSubtitle2.tr,
   ),
   OnBoardingModel(
     imagePath: Assets.imagesOnBoarding,
-    title: "Using modern AI technology for better user experience",
-    subTitle:
-        "AI provide recommendations and helps you to continue the search journey",
+    title:   AppStrings.onboardingTitle3.tr,
+    subTitle:AppStrings.onboardingSubtitle3.tr,
   ),
 ];

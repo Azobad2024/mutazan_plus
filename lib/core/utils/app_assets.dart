@@ -22,9 +22,9 @@ class Assets {
   /// assets/images/friendship_bnVpTrm.png
   static const String imagesFriendshipBnVpTrm = "assets/images/friendship_bnVpTrm.png";
 
-  /// Assets for imagesHarbor1 1
-  // / assets/images/harbor1 1.svg
-  // static const String imagesHarbor1 1 = "assets/images/harbor1 1.svg";
+  /// Assets for imagesHarbor11
+  /// assets/images/harbor11.svg
+  static const String imagesHarbor11 = "assets/images/harbor11.svg";
 
   /// Assets for imagesImages
   /// assets/images/images.png
@@ -41,6 +41,14 @@ class Assets {
   /// Assets for imagesOnBoarding1
   /// assets/images/onBoarding1.png
   static const String imagesOnBoarding1 = "assets/images/onBoarding1.png";
+
+  /// Assets for imagesOnBoarding11
+  /// assets/images/onBoarding11.jpg
+  static const String imagesOnBoarding11 = "assets/images/onBoarding11.jpg";
+
+  /// Assets for imagesOnBoarding111
+  /// assets/images/onBoarding111.png
+  static const String imagesOnBoarding111 = "assets/images/onBoarding111.png";
 
   /// Assets for imagesOnBoarding2
   /// assets/images/onBoarding2.png
