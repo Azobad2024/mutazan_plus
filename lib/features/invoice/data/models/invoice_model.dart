@@ -1,28 +1,27 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // lib/features/invoice/data/models/invoice_model.dart
 
 import 'package:mutazan_plus/core/databases/api/end_points.dart';
+
 import '../../domain/entities/invoice_entity.dart';
 import 'sub_models/invoice_materials_model.dart';
 
 class InvoiceModel extends InvoiceEntity {
   final int emptyWeightInv;
   final int loadedWeightInv;
+  @override
+  bool isVerified = false;
 
   InvoiceModel({
-    required int id,
-    required int weightCard,
-    required DateTime datetime,
-    required String netWeight,
-    required List<InvoiceMaterialsModel> invoiceMaterials,
+    required super.id,
+    required super.weightCard,
+    required super.datetime,
+    required super.netWeight,
+    required List<InvoiceMaterialsModel> super.invoiceMaterials,
     required this.emptyWeightInv,
     required this.loadedWeightInv,
-  }) : super(
-          id: id,
-          weightCard: weightCard,
-          datetime: datetime,
-          netWeight: netWeight,
-          invoiceMaterials: invoiceMaterials,
-        );
+    required this.isVerified,
+  });
 
   factory InvoiceModel.fromJson(Map<String, dynamic> json) {
     final rawMats = json[ApiKey.invoiceMaterials] as List<dynamic>;
@@ -38,6 +37,7 @@ class InvoiceModel extends InvoiceEntity {
       emptyWeightInv: json[ApiKey.emptyWeightInv] as int,
       loadedWeightInv: json[ApiKey.loadedWeightInv] as int,
       invoiceMaterials: mats,
+      isVerified: json['is_verified'] == true,
     );
   }
 
@@ -49,8 +49,10 @@ class InvoiceModel extends InvoiceEntity {
         ApiKey.netWeight: netWeight,
         ApiKey.emptyWeightInv: emptyWeightInv,
         ApiKey.loadedWeightInv: loadedWeightInv,
-        ApiKey.invoiceMaterials:
-            invoiceMaterials.map((m) => (m as InvoiceMaterialsModel).toJson()).toList(),
+        ApiKey.invoiceMaterials: invoiceMaterials
+            .map((m) => (m as InvoiceMaterialsModel).toJson())
+            .toList(),
+        ApiKey.isVerified: isVerified,
       };
 }
 

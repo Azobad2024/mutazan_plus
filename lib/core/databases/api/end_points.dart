@@ -65,4 +65,5 @@ class ApiKey {
   static String emptyWeightInv = "empty_weight_inv";
   static String loadedWeightInv = "loaded_weight_inv";
   static String invoiceMaterials = "invoice_materials";
+  static String isVerified = "is_verified";
 }

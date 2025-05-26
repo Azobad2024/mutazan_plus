@@ -1,9 +1,9 @@
+// lib/features/invoice/presentation/pages/invoices_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
-import 'package:responsive_framework/responsive_framework.dart' as responsive_framework;
-
 import 'package:mutazan_plus/core/widgets/custom_navbar.dart';
 import 'package:mutazan_plus/core/widgets/show_top_snack_bar.dart';
 import 'package:mutazan_plus/features/invoice/domain/entities/invoice_entity.dart';
@@ -16,9 +16,12 @@ import 'package:mutazan_plus/core/databases/api/end_points.dart';
 import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
 import 'package:mutazan_plus/core/services/services_locator.dart';
 import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
+import 'package:responsive_framework/responsive_framework.dart'
+    as responsive_framework;
 import '../widgets/invoices_app_bar.dart';
 import '../widgets/invoices_header.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
+import 'package:responsive_framework/responsive_framework.dart' as responsive;
 
 class InvoicesPage extends StatefulWidget {
   final String companyName;
@@ -38,6 +41,8 @@ class _InvoicesPageState extends State<InvoicesPage> {
   late final InvoiceCubit _cubit;
   late final TextEditingController _searchController;
   late final FocusNode _searchFocus;
+  late bool _showPending;
+
   bool _isSearching = false;
   List<InvoiceEntity> _all = [];
   List<InvoiceEntity> _filtered = [];
@@ -50,6 +55,17 @@ class _InvoicesPageState extends State<InvoicesPage> {
     _cubit = getIt<InvoiceCubit>()..fetchInvoices(xSchema);
     _searchController = TextEditingController()..addListener(_onSearchChanged);
     _searchFocus = FocusNode();
+    // قيمة افتراضية حتى نقراها في didChangeDependencies
+    _showPending = false;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // استخرج showPending من arguments
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    _showPending = args?['showPending'] as bool? ?? false;
   }
 
   @override
@@ -61,17 +77,25 @@ class _InvoicesPageState extends State<InvoicesPage> {
     super.dispose();
   }
 
-  void _onSearchChanged() {
+  void _applyFilter() {
+    // يطبق الفلترة بناءً على _showPending ثم البحث
+    final base = _showPending
+        ? _all.where((inv) => !inv.isVerified).toList()
+        : List<InvoiceEntity>.from(_all);
     final q = _searchController.text.trim().toLowerCase();
-    setState(() {
-      _filtered = q.isEmpty
-        ? List.from(_all)
-        : _all.where((inv) {
-            return inv.id.toString().contains(q)
-                || inv.materialName.toLowerCase().contains(q)
-                || inv.quantity.toLowerCase().contains(q);
-          }).toList();
-    });
+    if (q.isEmpty) {
+      _filtered = base;
+    } else {
+      _filtered = base.where((inv) {
+        return inv.id.toString().contains(q) ||
+            inv.materialName.toLowerCase().contains(q) ||
+            inv.quantity.toLowerCase().contains(q);
+      }).toList();
+    }
+  }
+
+  void _onSearchChanged() {
+    setState(_applyFilter);
   }
 
   Future<void> _onRefresh() async {
@@ -81,6 +105,8 @@ class _InvoicesPageState extends State<InvoicesPage> {
     }
     final xSchema = CacheHelper().getData(key: ApiKey.xSchema) as String;
     await _cubit.fetchInvoices(xSchema);
+    // بعد التحميل نطبّق الفلترة من جديد
+    setState(_applyFilter);
   }
 
   void _showVerifyDialog(InvoiceEntity inv) {
@@ -95,18 +121,16 @@ class _InvoicesPageState extends State<InvoicesPage> {
   Future<void> _verifyInvoice(int id) async {
     final res = await _cubit.verify(id);
     res.fold(
-      (f) => showTopSnackBar(
-        context,
-        message: f.errMessage,
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
+      (f) => showTopSnackBar(context,
+          message: f.errMessage, backgroundColor: Colors.red),
       (_) {
-        setState(() => _verifiedIds.add(id));
-        showTopSnackBar(
-          context,
-          message: AppStrings.invoiceVerified.tr,
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-        );
+        setState(() {
+          _verifiedIds.add(id);
+          _applyFilter(); // بعد التأكيد نعيد تطبيق الفلترة
+        });
+        showTopSnackBar(context,
+            message: AppStrings.invoiceVerified.tr,
+            backgroundColor: Colors.green);
       },
     );
   }
@@ -114,19 +138,19 @@ class _InvoicesPageState extends State<InvoicesPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return BlocConsumer<InvoiceCubit, InvoiceState>(
       bloc: _cubit,
       listener: (ctx, state) {
         if (state is InvoiceSuccess) {
           _all = state.invoices;
-          _filtered = List.from(_all);
+          setState(_applyFilter);
         }
         if (state is InvoiceFailure) {
-          showTopSnackBar(ctx, message: state.message, backgroundColor: theme.colorScheme.error);
+          showTopSnackBar(ctx,
+              message: state.message, backgroundColor: theme.colorScheme.error);
         }
       },
-      builder: (ctx, state) {
+      builder: (_, state) {
         return GestureDetector(
           onTap: () {
             if (_isSearching) {
@@ -136,6 +160,7 @@ class _InvoicesPageState extends State<InvoicesPage> {
           },
           child: Scaffold(
             appBar: InvoicesAppBar(
+              title: widget.companyName,
               isSearching: _isSearching,
               searchController: _searchController,
               searchFocus: _searchFocus,
@@ -147,9 +172,9 @@ class _InvoicesPageState extends State<InvoicesPage> {
                 Expanded(child: _buildBody(state)),
               ],
             ),
-            bottomNavigationBar: BlocBuilder<NavCubit, int>(
-              builder: (_, __) => NavigationBarItems(showBarcode: false),
-            ),
+            bottomNavigationBar: BlocBuilder<NavCubit, int>(builder: (_, __) {
+              return NavigationBarItems(showBarcode: false);
+            }),
           ),
         );
       },
@@ -161,22 +186,29 @@ class _InvoicesPageState extends State<InvoicesPage> {
       return const Center(child: CircularProgressIndicator());
     }
     if (_filtered.isEmpty) {
-      return Center(child: Text(AppStrings.noInvoices.tr, style: Theme.of(context).textTheme.bodyMedium));
+      return Center(
+        child: Text(AppStrings.noInvoices.tr,
+            style: Theme.of(context).textTheme.bodyMedium),
+      );
     }
     return RefreshIndicator(
       onRefresh: _onRefresh,
-      backgroundColor: AppColors.primaryBackground,
+      backgroundColor: AppColors.container1Color,
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(
-          vertical: responsive_framework.ResponsiveValue<double>(context, defaultValue: 16, conditionalValues: [
-            responsive_framework.Condition.largerThan(name: responsive_framework.MOBILE, value: 24)
-          ]).value,
+          vertical: responsive_framework.ResponsiveValue<double>(context,
+              defaultValue: 16,
+              conditionalValues: [
+                responsive_framework.Condition.largerThan(
+                    name: responsive_framework.MOBILE, value: 24)
+              ]).value!,
         ),
         itemCount: _filtered.length,
-        itemBuilder: (ctx, i) {
+        itemBuilder: (_, i) {
           final inv = _filtered[i];
-          return InvoiceCard(
+          return 
+          InvoiceCard(
             invoiceNumber: inv.id.toString(),
             date: inv.datetime.toString(),
             quantity: inv.quantity,
@@ -190,6 +222,211 @@ class _InvoicesPageState extends State<InvoicesPage> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:get/get.dart';
+// import 'package:mutazan_plus/core/utils/app_colors.dart';
+// import 'package:responsive_framework/responsive_framework.dart' as responsive_framework;
+
+// import 'package:mutazan_plus/core/widgets/custom_navbar.dart';
+// import 'package:mutazan_plus/core/widgets/show_top_snack_bar.dart';
+// import 'package:mutazan_plus/features/invoice/domain/entities/invoice_entity.dart';
+// import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_cubit.dart';
+// import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_state.dart';
+// import 'package:mutazan_plus/features/invoice/presentation/widgets/invoice_card.dart';
+// import 'package:mutazan_plus/features/invoice/presentation/widgets/verify_invoice_dialog.dart';
+// import 'package:mutazan_plus/core/connection/network_info.dart';
+// import 'package:mutazan_plus/core/databases/api/end_points.dart';
+// import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
+// import 'package:mutazan_plus/core/services/services_locator.dart';
+// import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
+// import '../widgets/invoices_app_bar.dart';
+// import '../widgets/invoices_header.dart';
+// import 'package:mutazan_plus/core/utils/app_strings.dart';
+
+// class InvoicesPage extends StatefulWidget {
+//   final String companyName;
+//   final String companyImag;
+
+//   const InvoicesPage({
+//     super.key,
+//     required this.companyName,
+//     required this.companyImag,
+//   });
+
+//   @override
+//   State<InvoicesPage> createState() => _InvoicesPageState();
+// }
+
+// class _InvoicesPageState extends State<InvoicesPage> {
+//   late final InvoiceCubit _cubit;
+//   late final TextEditingController _searchController;
+//   late final FocusNode _searchFocus;
+//   bool _isSearching = false;
+//   List<InvoiceEntity> _all = [];
+//   List<InvoiceEntity> _filtered = [];
+//   final Set<int> _verifiedIds = {};
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     final xSchema = CacheHelper().getData(key: ApiKey.xSchema) as String;
+//     _cubit = getIt<InvoiceCubit>()..fetchInvoices(xSchema);
+//     _searchController = TextEditingController()..addListener(_onSearchChanged);
+//     _searchFocus = FocusNode();
+//   }
+
+//   @override
+//   void dispose() {
+//     _searchController
+//       ..removeListener(_onSearchChanged)
+//       ..dispose();
+//     _searchFocus.dispose();
+//     super.dispose();
+//   }
+
+//   void _onSearchChanged() {
+//     final q = _searchController.text.trim().toLowerCase();
+//     setState(() {
+//       _filtered = q.isEmpty
+//         ? List.from(_all)
+//         : _all.where((inv) {
+//             return inv.id.toString().contains(q)
+//                 || inv.materialName.toLowerCase().contains(q)
+//                 || inv.quantity.toLowerCase().contains(q);
+//           }).toList();
+//     });
+//   }
+
+//   Future<void> _onRefresh() async {
+//     if (!await getIt<NetworkInfo>().isConnected) {
+//       showTopSnackBar(context, message: AppStrings.noInternet.tr);
+//       return;
+//     }
+//     final xSchema = CacheHelper().getData(key: ApiKey.xSchema) as String;
+//     await _cubit.fetchInvoices(xSchema);
+//   }
+
+//   void _showVerifyDialog(InvoiceEntity inv) {
+//     showVerifyInvoiceDialog(
+//       context: context,
+//       invoice: inv,
+//       alreadyVerified: _verifiedIds.contains(inv.id),
+//       onConfirm: _verifyInvoice,
+//     );
+//   }
+
+//   Future<void> _verifyInvoice(int id) async {
+//     final res = await _cubit.verify(id);
+//     res.fold(
+//       (f) => showTopSnackBar(
+//         context,
+//         message: f.errMessage,
+//         backgroundColor: Theme.of(context).colorScheme.error,
+//       ),
+//       (_) {
+//         setState(() => _verifiedIds.add(id));
+//         showTopSnackBar(
+//           context,
+//           message: AppStrings.invoiceVerified.tr,
+//           backgroundColor: Theme.of(context).colorScheme.secondary,
+//         );
+//       },
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+
+//     return BlocConsumer<InvoiceCubit, InvoiceState>(
+//       bloc: _cubit,
+//       listener: (ctx, state) {
+//         if (state is InvoiceSuccess) {
+//           _all = state.invoices;
+//           _filtered = List.from(_all);
+//         }
+//         if (state is InvoiceFailure) {
+//           showTopSnackBar(ctx, message: state.message, backgroundColor: theme.colorScheme.error);
+//         }
+//       },
+//       builder: (ctx, state) {
+//         return GestureDetector(
+//           onTap: () {
+//             if (_isSearching) {
+//               _searchFocus.unfocus();
+//               setState(() => _isSearching = false);
+//             }
+//           },
+//           child: Scaffold(
+//             appBar: InvoicesAppBar(
+//               isSearching: _isSearching,
+//               searchController: _searchController,
+//               searchFocus: _searchFocus,
+//               onSearchStart: () => setState(() => _isSearching = true),
+//             ),
+//             body: Column(
+//               children: [
+//                 InvoicesHeader(count: _filtered.length),
+//                 Expanded(child: _buildBody(state)),
+//               ],
+//             ),
+//             bottomNavigationBar: BlocBuilder<NavCubit, int>(
+//               builder: (_, __) => NavigationBarItems(showBarcode: false),
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+
+//   Widget _buildBody(InvoiceState state) {
+//     if (state is InvoiceLoading) {
+//       return const Center(child: CircularProgressIndicator());
+//     }
+//     if (_filtered.isEmpty) {
+//       return Center(child: Text(AppStrings.noInvoices.tr, style: Theme.of(context).textTheme.bodyMedium));
+//     }
+//     return RefreshIndicator(
+//       onRefresh: _onRefresh,
+//       backgroundColor: AppColors.primaryBackground,
+//       child: ListView.builder(
+//         physics: const BouncingScrollPhysics(),
+//         padding: EdgeInsets.symmetric(
+//           vertical: responsive_framework.ResponsiveValue<double>(context, defaultValue: 16, conditionalValues: [
+//             responsive_framework.Condition.largerThan(name: responsive_framework.MOBILE, value: 24)
+//           ]).value,
+//         ),
+//         itemCount: _filtered.length,
+//         itemBuilder: (ctx, i) {
+//           final inv = _filtered[i];
+//           return InvoiceCard(
+//             invoiceNumber: inv.id.toString(),
+//             date: inv.datetime.toString(),
+//             quantity: inv.quantity,
+//             material: inv.materialName,
+//             netWeight: inv.netWeight,
+//             isVerified: _verifiedIds.contains(inv.id),
+//             onTap: () => _showVerifyDialog(inv),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
 
 
 

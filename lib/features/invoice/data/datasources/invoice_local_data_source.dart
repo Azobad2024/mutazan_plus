@@ -5,25 +5,46 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/invoice_model.dart';
 
 class InvoiceLocalDataSource {
-  static const _key = 'saved_invoices';
+  static const _invoicesKey = 'saved_invoices';
+  static const _verifiedKey = 'verified_invoices';
 
   Future<void> saveAllInvoices(List<InvoiceModel> invoices) async {
     final prefs = await SharedPreferences.getInstance();
     final enc = invoices.map((inv) => jsonEncode(inv.toJson())).toList();
-    await prefs.setStringList(_key, enc);
+    await prefs.setStringList(_invoicesKey, enc);
   }
 
   Future<List<InvoiceModel>> getAllInvoices() async {
     final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getStringList(_key) ?? [];
-    return data
-        .map((str) => InvoiceModel.fromJson(jsonDecode(str)))
-        .toList();
+    final data = prefs.getStringList(_invoicesKey) ?? [];
+    final verifiedIds = prefs.getStringList(_verifiedKey)
+                          ?.map(int.parse)
+                          .toSet() ?? {};
+
+    return data.map((str) {
+      final model = InvoiceModel.fromJson(jsonDecode(str));
+      // هنا نضع isVerified
+      if (verifiedIds.contains(model.id)) {
+        model.isVerified = true;
+      }
+      return model;
+    }).toList();
+  }
+
+  Future<void> markInvoiceVerified(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    // نأخذ القائمة القديمة أو فارغة
+    final vList = prefs.getStringList(_verifiedKey) ?? [];
+    if (!vList.contains(id.toString())) {
+      vList.add(id.toString());
+      await prefs.setStringList(_verifiedKey, vList);
+    }
   }
 
   Future<void> clearInvoices() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_key);
+    await prefs.remove(_invoicesKey);
+    await prefs.remove(_verifiedKey);  // ننظف القائمة كذلك
   }
 }
 

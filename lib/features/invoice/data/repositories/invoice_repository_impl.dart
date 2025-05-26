@@ -53,6 +53,8 @@ class InvoiceRepositoryImpl implements InvoiceRepository {
 
   @override
   Future<Either<Failure, Unit>> verifyInvoice(int invoiceId) async {
+    await localDataSource.markInvoiceVerified(invoiceId);
+
     // تحقق محلي فقط
     return Right(unit);
   }

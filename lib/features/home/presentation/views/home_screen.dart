@@ -1,7 +1,6 @@
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:get/get_state_manager/src/rx_flutter/rx_notifier.dart';
 import 'package:mutazan_plus/core/services/services_locator.dart';
 import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
 import 'package:mutazan_plus/features/company/presentation/pages/companies_page.dart';
@@ -13,17 +12,21 @@ import 'package:mutazan_plus/features/home/presentation/widgets/StatsRowWidget.d
 import 'package:mutazan_plus/features/home/presentation/widgets/header_widget.dart';
 import 'package:mutazan_plus/features/home/presentation/widgets/footer_widget.dart';
 import 'package:mutazan_plus/features/home/presentation/widgets/header_row_widget.dart';
-import 'package:mutazan_plus/view/widgets/StatsWidget.dart';
+import 'package:mutazan_plus/features/home/presentation/widgets/StatsWidget.dart';
 import 'package:responsive_framework/responsive_framework.dart' as resp;
 import 'package:responsive_framework/responsive_framework.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // Padding متجاوب
-    final horizontalPadding = resp.ResponsiveValue<double>(
+final horizontalPadding = resp.ResponsiveValue<double>(
       context,
       defaultValue: 16,
       conditionalValues: [

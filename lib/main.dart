@@ -3,19 +3,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mutazan_plus/core/databases/api/end_points.dart';
 import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
 import 'package:mutazan_plus/core/routes/app_router.dart';
 import 'package:mutazan_plus/core/services/services_locator.dart';
 import 'package:mutazan_plus/core/utils/theme/theme.dart';
 import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
 import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
+import 'package:mutazan_plus/features/invoice/domain/usecases/get_invoices.dart';
+import 'package:mutazan_plus/features/invoice/domain/usecases/verify_invoice.dart';
+import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_cubit.dart';
 import 'package:mutazan_plus/features/theme/bloc/theme_bloc.dart';
 import 'package:mutazan_plus/features/controler/language_controller.dart';
 import 'package:mutazan_plus/features/helpers/permissions_helper.dart';
 import 'package:mutazan_plus/features/languages/translations.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/// The main entry point of the application.
+///
+/// This function initializes necessary services and configurations for the app.
+/// It ensures Flutter bindings are initialized and sets up the service locator
+/// for dependency injection. It initializes the cache and requests necessary
+/// permissions. Hive is initialized for local data storage, and the saved 
+/// language and theme settings are loaded. The app is then started by running
+/// the `MyApp` widget wrapped with multiple BlocProviders for state management.
 
+/*******  8827e23e-b05b-4576-b962-13b9c5222af4  *******/
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -46,12 +60,14 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider<ThemeBloc>.value(value: themeBloc),
-        BlocProvider<CompanyCubit>(
-          create: (_) => getIt<CompanyCubit>()..fetchCompanies(),
-        ),
+        
         BlocProvider<NavCubit>(
           create: (_) => NavCubit(),
         ),
+        BlocProvider<CompanyCubit>.value(
+            value: getIt<CompanyCubit>()..fetchCompanies()),
+        BlocProvider<InvoiceCubit>.value(
+            value: getIt<InvoiceCubit>()..fetchInvoices(ApiKey.xSchema)),
       ],
       child: const MyApp(),
     ),
@@ -70,8 +86,7 @@ class MyApp extends StatelessWidget {
           // ربط الثيمات المحسّنة
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode:
-              state is DarkThemeState ? ThemeMode.dark : ThemeMode.light,
+          themeMode: state is DarkThemeState ? ThemeMode.dark : ThemeMode.light,
 
           // إعدادات اللغة والمحليّات
           locale: Get.find<LanguageController>().isArabic.value
@@ -112,94 +127,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
-// import 'package:get/get.dart';
-// import 'package:hive_flutter/hive_flutter.dart';
-// import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
-// import 'package:mutazan_plus/core/routes/app_router.dart';
-// import 'package:mutazan_plus/core/services/services_locator.dart';
-// import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
-// import 'package:responsive_framework/responsive_framework.dart';
-// import 'features/controler/language_controller.dart';
-// import 'features/helpers/permissions_helper.dart';
-// import 'features/languages/translations.dart';
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   setupServiceLocator();
-//   await getIt<CacheHelper>().init();
-//   await PermissionsHelper.requestPermissions();
-//   await initHive();
-
-//   final languageController = Get.put(LanguageController());
-//   await languageController.loadSavedLanguage();
-
-//   runApp( BlocProvider<CompanyCubit>(
-//       create: (_) => getIt<CompanyCubit>()..fetchCompanies(),
-//       child: const MyApp(),
-//     ),);
-// }
-
-// Future<void> initHive() async {
-//   await Hive.initFlutter();
-//   await Hive.openBox('settings');
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GetMaterialApp.router(
-//       debugShowCheckedModeBanner: false,
-//       // themeMode: ThemeMode.system,
-//       //   theme: AppTheme.lightTheme,
-//       //   darkTheme: AppTheme.darkTheme,
-//       theme: ThemeData(fontFamily: "Khandevane"),
-//       locale: Get.find<LanguageController>().isArabic.value
-//           ? const Locale('ar', 'AE')
-//           : const Locale('en', 'US'),
-//       fallbackLocale: const Locale('en', 'US'),
-//       translations: AppTranslations(),
-//       localizationsDelegates: const [
-//         GlobalMaterialLocalizations.delegate,
-//         GlobalWidgetsLocalizations.delegate,
-//         GlobalCupertinoLocalizations.delegate,
-//       ],
-//       supportedLocales: const [Locale('ar', 'AE')],
-//       builder: (context, child) {
-//         // أولاً Directionality كما كان
-//         final rtlChild = Directionality(
-//           textDirection: TextDirection.rtl,
-//           child: child!,
-//         );
-//         // ثم نلفّه بـ ResponsiveWrapper
-//         return ResponsiveWrapper.builder(
-//           ClampingScrollWrapper.builder(context, rtlChild),
-//           // يمكنك تعديل القيم حسب احتياجك:
-//           maxWidth: 1200,
-//           minWidth: 450,
-//           defaultScale: true,
-//           breakpoints: [
-//             // لاحظ أننا نستخدم ResponsiveBreakpoint.resize وليس resize وحسب
-//             ResponsiveBreakpoint.resize(450, name: MOBILE),
-//             ResponsiveBreakpoint.autoScale(800, name: TABLET),
-//             ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
-//           ],
-//         );
-//       },
-//               // ربط GoRouter
-//         routeInformationParser:    router.routeInformationParser,
-//         routerDelegate:           router.routerDelegate,
-//         routeInformationProvider: router.routeInformationProvider,
-//       //routerConfig: router,
-//       //  initialRoute: LoginScreenWithWelcome.routeName,
-//       //  getPages: AppRoutes.routes,
-//     );
-//   }
-// }

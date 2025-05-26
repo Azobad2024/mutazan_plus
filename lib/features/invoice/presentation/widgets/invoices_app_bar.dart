@@ -5,6 +5,7 @@ import 'package:responsive_framework/responsive_framework.dart' as responsive;
 import 'package:mutazan_plus/core/utils/app_strings.dart';
 
 class InvoicesAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
   final bool isSearching;
   final TextEditingController searchController;
   final FocusNode searchFocus;
@@ -15,7 +16,8 @@ class InvoicesAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.isSearching,
     required this.searchController,
     required this.searchFocus,
-    required this.onSearchStart,
+    required this.onSearchStart, 
+    required this.title,
   });
 
   @override
