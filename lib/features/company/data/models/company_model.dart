@@ -75,7 +75,7 @@ class CompanyModel extends CompanyEntity {
         rawLogo.startsWith('http') ? rawLogo : "${EndPoint.baseUrl}$rawLogo";
 
     return CompanyModel(
-      id: json[ApiKey.id] as int? ?? 0,
+      id: json[ApiKey.companyId] as int? ?? 0,
       companyName: json[ApiKey.companyName] as String? ?? '',
       logo: fullLogo,
       active: json[ApiKey.active] as String? ?? 'false',
@@ -98,7 +98,7 @@ class CompanyModel extends CompanyEntity {
   Map<String, dynamic> toJson() {
     // خزِّن كل الحقول كي يعمل الكاش بكامله
     return {
-      ApiKey.id: id,
+      ApiKey.companyId: id,
       ApiKey.companyName: companyName,
       ApiKey.logo: logo,
       ApiKey.active: active,

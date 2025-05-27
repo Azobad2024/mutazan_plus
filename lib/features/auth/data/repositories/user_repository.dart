@@ -6,6 +6,50 @@ import 'package:mutazan_plus/core/databases/api/end_points.dart';
 import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
 import 'package:mutazan_plus/core/errors/expentions.dart';
 import 'package:mutazan_plus/features/auth/data/models/sign_in_model.dart';
+import 'package:mutazan_plus/features/auth/data/models/user_model.dart';
+
+// class UserRepository {
+//   final ApiConsumer api;
+//   final NetworkInfo networkInfo;
+
+//   UserRepository({ required this.networkInfo, required this.api });
+
+//   /// بعد تسجيل الدخول نخزن user_id من التوكين
+//   Future<Either<String, SignInModel>> signIn({
+//     required String username,
+//     required String password,
+//   }) async {
+//     final cache = CacheHelper();
+//     // ... تحقق من الاتصال (offline fallback) ...
+
+//     final resp = await api.post(EndPoint.signIn, data: {
+//       ApiKey.username: username,
+//       ApiKey.password: password,
+//     });
+
+//     final user = SignInModel.fromJson(resp as Map<String, dynamic>);
+//     final decoded = JwtDecoder.decode(user.access);
+
+//     await cache.saveData(key: ApiKey.access, value: user.access);
+//     await cache.saveData(key: ApiKey.refresh, value: user.refresh);
+//     await cache.saveData(key: ApiKey.username, value: username);
+//     await cache.saveData(key: ApiKey.password, value: password);
+
+//     return Right(user);
+//   }
+
+//   Future<Either<String, UserModel>> getUserProfile() async {
+//   try {
+//     final resp = await api.get(EndPoint.getUserDataMe());
+//     return Right(UserModel.fromJson(resp as Map<String, dynamic>));
+//   } on ServerException catch (e) {
+//     return Left(e.errModel.detail ?? ' خطأ في الخادم ');
+//   } catch (e) {
+//     return Left('خطأ غير متوقع: $e');
+//   }
+// }
+
+// }
 
 class UserRepository {
   final ApiConsumer api;
@@ -56,6 +100,11 @@ class UserRepository {
       // فك التوكن لحفظ البيانات
       final decoded = JwtDecoder.decode(user.access);
 
+      final userId = decoded['user_id']?.toString();
+      if (userId != null) {
+        await cache.saveData(key: ApiKey.id, value: userId);
+      }
+
       // حفظ في الكاش
       await cache.saveData(key: ApiKey.access, value: user.access);
       await cache.saveData(key: ApiKey.refresh, value: user.refresh);
@@ -71,4 +120,30 @@ class UserRepository {
       return Left('خطأ غير متوقع: $e');
     }
   }
+
+  Future<Either<String, UserModel>> getUserProfile() async {
+    try {
+      final resp = await api.get(EndPoint.getUserDataMe());
+      return Right(UserModel.fromJson(resp as Map<String, dynamic>));
+    } on ServerException catch (e) {
+      return Left(e.errModel.detail ?? ' خطأ في الخادم ');
+    } catch (e) {
+      return Left('خطأ غير متوقع: $e');
+    }
+  }
 }
+
+
+ // Profile
+  // Future<Either<String, UserModel>> getUserProfile() async {
+  //   try {
+  //     final response = await api.get(
+  //       EndPoint.getUserDataEndPoint(
+  //         CacheHelper().getData(key: ApiKey.id),
+  //       ),
+  //     );
+  //     return Right(UserModel.fromJson(response));
+  //   } on ServerException catch (e) {
+  //     return Left(e.errModel.errorMessage ?? 'حدث خطأ في الخادم');
+  //   }
+  // }

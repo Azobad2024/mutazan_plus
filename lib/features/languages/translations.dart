@@ -63,6 +63,7 @@ class AppTranslations extends Translations {
           AppStrings.address: 'العنوان',
           AppStrings.sanaaYemen: 'صنعاء، اليمن',
           AppStrings.email: 'البريد الإلكتروني',
+          AppStrings.profile: 'الملف الشخصي',
 
           // Onboarding
           AppStrings.onboardingTitle1: 'استكشاف المخالفات بطريقة ذكية مع نظام متزان',
@@ -162,6 +163,7 @@ class AppTranslations extends Translations {
           AppStrings.address: 'Address',
           AppStrings.sanaaYemen: 'Sanaa, Yemen',
           AppStrings.email: 'Email',
+          AppStrings.profile: 'profile',
 
           // Onboarding
           AppStrings.onboardingTitle1: 'Explore history smartly with Dalel',

@@ -1,3 +1,5 @@
+import 'package:mutazan_plus/features/auth/data/models/user_model.dart';
+
 class UserState {}
 
 final class UserInitial extends UserState {}
@@ -13,3 +15,18 @@ final class SignInFailure extends UserState {
 }
 
 class PasswordVisibilityChanged extends UserState {}
+
+
+final class GetUserSuccess extends UserState {
+  final UserModel user;
+
+  GetUserSuccess({required this.user});
+}
+
+final class GetUserLoading extends UserState {}
+
+final class GetUserFailure extends UserState {
+  final String errMessage;
+
+  GetUserFailure({required this.errMessage});
+}

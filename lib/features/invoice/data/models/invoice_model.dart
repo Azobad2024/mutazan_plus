@@ -30,7 +30,7 @@ class InvoiceModel extends InvoiceEntity {
         .toList();
 
     return InvoiceModel(
-      id: json[ApiKey.id] as int,
+      id: json[ApiKey.invoiceId] as int,
       weightCard: json[ApiKey.weightCard] as int,
       datetime: DateTime.parse(json[ApiKey.datetime] as String),
       netWeight: json[ApiKey.netWeight] as String,
@@ -43,7 +43,7 @@ class InvoiceModel extends InvoiceEntity {
 
   @override
   Map<String, dynamic> toJson() => {
-        ApiKey.id: id,
+        ApiKey.invoiceId: id,
         ApiKey.weightCard: weightCard,
         ApiKey.datetime: datetime.toIso8601String(),
         ApiKey.netWeight: netWeight,

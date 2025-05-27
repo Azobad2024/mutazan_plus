@@ -1,13 +1,20 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:responsive_framework/responsive_framework.dart' as responsive;
+import 'package:image_picker/image_picker.dart';
+import 'package:mutazan_plus/core/databases/api/end_points.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
 import 'package:mutazan_plus/core/utils/app_strings.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:mutazan_plus/core/widgets/custom_navbar.dart';
+import 'package:mutazan_plus/features/auth/data/models/user_model.dart';
+import 'package:mutazan_plus/features/auth/presentation/cubit/user_cubit.dart';
+import 'package:mutazan_plus/features/auth/presentation/cubit/user_state.dart';
+import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
+import 'package:responsive_framework/responsive_framework.dart' as responsive;
 
 class ProfilePage1 extends StatefulWidget {
-  const ProfilePage1({super.key});
+  const ProfilePage1({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage1> createState() => _ProfilePage1State();
@@ -17,17 +24,61 @@ class _ProfilePage1State extends State<ProfilePage1> {
   File? _imageFile;
   final _picker = ImagePicker();
 
+  @override
+  void initState() {
+    super.initState();
+    // جلب بيانات المستخدم
+    context.read<UserCubit>().getUserProfile();
+  }
+
   Future<void> _pickImage() async {
     final picked = await _picker.pickImage(source: ImageSource.camera);
-    if (picked != null) {
-      setState(() => _imageFile = File(picked.path));
-    }
+    if (picked != null) setState(() => _imageFile = File(picked.path));
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 0,
+        title: Text(
+          AppStrings.profile.tr,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: BlocBuilder<UserCubit, UserState>(
+        builder: (ctx, state) {
+          if (state is GetUserLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is GetUserFailure) {
+            return Center(child: Text(state.errMessage));
+          }
+          final user = (state as GetUserSuccess).user;
+          return _buildProfile(context, user);
+        },
+      ),
+      bottomNavigationBar: BlocBuilder<NavCubit, int>(
+        builder: (context, selectedIndex) {
+          return Container(
+            color:Theme.of(context).canvasColor,
+            // padding: const EdgeInsets.symmetric(vertical: 8),
+            child: NavigationBarItems(
+              showBarcode: false,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildProfile(BuildContext context, UserModel user) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final height = MediaQuery.of(context).size.height;
     final avatarRadius = responsive.ResponsiveValue<double>(
       context,
@@ -35,33 +86,48 @@ class _ProfilePage1State extends State<ProfilePage1> {
       conditionalValues: [
         responsive.Condition.largerThan(name: responsive.TABLET, value: 100),
       ],
-    ).value;
+    ).value!;
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(backgroundColor: AppColors.container1Color),
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: height * 0.4,
-              child: _TopPortion(
-                imageFile: _imageFile,
-                onCameraTap: _pickImage,
-                avatarRadius: avatarRadius,
-              ),
+    final sectionSpacing = responsive.ResponsiveValue<double>(
+      context,
+      defaultValue: 16,
+      conditionalValues: [
+        responsive.Condition.largerThan(name: responsive.TABLET, value: 24),
+      ],
+    ).value!;
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: height * 0.4,
+            child: _TopPortion(
+              imageFile: _imageFile,
+              remotePicUrl: user.profilePic,
+              avatarRadius: avatarRadius,
+              onCameraTap: _pickImage,
             ),
-            const SizedBox(height: 16),
-            Text(
-              'abdelazeez obad', // بالإمكان استبدالها بمتغير للمستخدم
-              style: theme.textTheme.headlineSmall!
-                  .copyWith(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: sectionSpacing),
+          Text(
+            user.name,
+            style: theme.textTheme.headlineSmall!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: sectionSpacing),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: responsive.ResponsiveValue<double>(
+                context,
+                defaultValue: 20,
+                conditionalValues: [
+                  responsive.Condition.largerThan(name: responsive.TABLET, value: 40),
+                ],
+              ).value!,
             ),
-            const SizedBox(height: 16),
-            const _UserInfoCard(),
-            const Spacer(),
-          ],
-        ),
+            child: _UserInfoCard(user: user),
+          ),
+        ],
       ),
     );
   }
@@ -69,19 +135,21 @@ class _ProfilePage1State extends State<ProfilePage1> {
 
 class _TopPortion extends StatelessWidget {
   final File? imageFile;
-  final VoidCallback onCameraTap;
+  final String remotePicUrl;
   final double avatarRadius;
+  final VoidCallback onCameraTap;
 
   const _TopPortion({
     this.imageFile,
-    required this.onCameraTap,
+    required this.remotePicUrl,
     required this.avatarRadius,
+    required this.onCameraTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gradient = LinearGradient(
+    final grad = LinearGradient(
       begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
       colors: [
@@ -89,13 +157,12 @@ class _TopPortion extends StatelessWidget {
         AppColors.container1Color,
       ],
     );
-
     return Stack(
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 50),
           decoration: BoxDecoration(
-            gradient: gradient,
+            gradient: grad,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(50),
               bottomRight: Radius.circular(50),
@@ -103,7 +170,9 @@ class _TopPortion extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: 0, left: 0, right: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
           child: Center(
             child: Stack(
               children: [
@@ -111,15 +180,18 @@ class _TopPortion extends StatelessWidget {
                   radius: avatarRadius,
                   backgroundImage: imageFile != null
                       ? FileImage(imageFile!)
-                      : const AssetImage('assets/images/myProfile.png')
-                          as ImageProvider,
+                      : (remotePicUrl.isNotEmpty
+                          ? NetworkImage("${EndPoint.baseUrl}$remotePicUrl")
+                          : const AssetImage('assets/images/myProfile.png')
+                              as ImageProvider),
                 ),
                 Positioned(
-                  bottom: 0, right: 4,
+                  bottom: 0,
+                  right: avatarRadius * 0.1,
                   child: GestureDetector(
                     onTap: onCameraTap,
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(avatarRadius * 0.1),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: theme.colorScheme.secondary,
@@ -142,43 +214,57 @@ class _TopPortion extends StatelessWidget {
 }
 
 class _UserInfoCard extends StatelessWidget {
-  const _UserInfoCard();
+  final UserModel user;
+  const _UserInfoCard({required this.user});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       color: theme.cardColor,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(
+          vertical: responsive.ResponsiveValue<double>(
+            context,
+            defaultValue: 16,
+            conditionalValues: [
+              responsive.Condition.largerThan(name: responsive.TABLET, value: 24),
+            ],
+          ).value,
+          horizontal: responsive.ResponsiveValue<double>(
+            context,
+            defaultValue: 16,
+            conditionalValues: [
+              responsive.Condition.largerThan(name: responsive.TABLET, value: 24),
+            ],
+          ).value,
+        ),
         child: Column(
           children: [
-            _UserInfoRow(
+            _Row(
               icon: Icons.person,
               label: AppStrings.username.tr,
-              value: 'abdelazeez',
+              value: user.name,
             ),
             Divider(color: theme.dividerColor),
-            _UserInfoRow(
-              icon: Icons.phone,
-              label: AppStrings.phoneNumber.tr,
-              value: '770571954',
-            ),
-            Divider(color: theme.dividerColor),
-            _UserInfoRow(
-              icon: Icons.location_on,
-              label: AppStrings.address.tr,
-              value: AppStrings.sanaaYemen.tr,
-            ),
-            Divider(color: theme.dividerColor),
-            _UserInfoRow(
+            _Row(
               icon: Icons.email,
               label: AppStrings.email.tr,
-              value: 'abdelazeez@example.com',
+              value: user.email,
+            ),
+            Divider(color: theme.dividerColor),
+            _Row(
+              icon: Icons.phone,
+              label: AppStrings.phoneNumber.tr,
+              value: user.phone,
+            ),
+            Divider(color: theme.dividerColor),
+            _Row(
+              icon: Icons.location_on,
+              label: AppStrings.address.tr,
+              value: user.address,
             ),
           ],
         ),
@@ -187,38 +273,46 @@ class _UserInfoCard extends StatelessWidget {
   }
 }
 
-class _UserInfoRow extends StatelessWidget {
+class _Row extends StatelessWidget {
   final IconData icon;
-  final String label;
-  final String value;
-
-  const _UserInfoRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
+  final String label, value;
+  const _Row({required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final iconColor = theme.colorScheme.primary;
-    final textStyle = theme.textTheme.bodyMedium;
+    final iconSize = responsive.ResponsiveValue<double>(
+      context,
+      defaultValue: 24,
+      conditionalValues: [
+        responsive.Condition.largerThan(name: responsive.TABLET, value: 28),
+      ],
+    ).value!;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(
+        vertical: responsive.ResponsiveValue<double>(
+          context,
+          defaultValue: 8,
+          conditionalValues: [
+            responsive.Condition.largerThan(name: responsive.TABLET, value: 12),
+          ],
+        ).value!,
+      ),
       child: Row(
         children: [
-          Icon(icon, color: iconColor, size: 24),
+          Icon(icon, color: theme.colorScheme.primary, size: iconSize),
           const SizedBox(width: 12),
           Text(
             '$label: ',
-            style: textStyle?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.bodyMedium!
+                .copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               value,
-              style: textStyle,
+              style: theme.textTheme.bodyMedium,
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -227,3 +321,5 @@ class _UserInfoRow extends StatelessWidget {
     );
   }
 }
+
+

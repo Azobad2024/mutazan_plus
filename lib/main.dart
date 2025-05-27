@@ -8,10 +8,9 @@ import 'package:mutazan_plus/core/databases/cache/cache_helper.dart';
 import 'package:mutazan_plus/core/routes/app_router.dart';
 import 'package:mutazan_plus/core/services/services_locator.dart';
 import 'package:mutazan_plus/core/utils/theme/theme.dart';
+import 'package:mutazan_plus/features/auth/presentation/cubit/user_cubit.dart';
 import 'package:mutazan_plus/features/company/presentation/cubit/company_cubit.dart';
 import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
-import 'package:mutazan_plus/features/invoice/domain/usecases/get_invoices.dart';
-import 'package:mutazan_plus/features/invoice/domain/usecases/verify_invoice.dart';
 import 'package:mutazan_plus/features/invoice/presentation/cubit/invoice_cubit.dart';
 import 'package:mutazan_plus/features/theme/bloc/theme_bloc.dart';
 import 'package:mutazan_plus/features/controler/language_controller.dart';
@@ -19,17 +18,6 @@ import 'package:mutazan_plus/features/helpers/permissions_helper.dart';
 import 'package:mutazan_plus/features/languages/translations.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-/*************  ✨ Windsurf Command ⭐  *************/
-/// The main entry point of the application.
-///
-/// This function initializes necessary services and configurations for the app.
-/// It ensures Flutter bindings are initialized and sets up the service locator
-/// for dependency injection. It initializes the cache and requests necessary
-/// permissions. Hive is initialized for local data storage, and the saved 
-/// language and theme settings are loaded. The app is then started by running
-/// the `MyApp` widget wrapped with multiple BlocProviders for state management.
-
-/*******  8827e23e-b05b-4576-b962-13b9c5222af4  *******/
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -55,19 +43,27 @@ void main() async {
       (cache.getData(key: 'isDarkMode') as bool?) ?? false;
   final themeBloc = ThemeBloc(cache)
     ..add(ChangeThemeEvent(isDark: savedDarkMode));
+  final companyCubit = getIt<CompanyCubit>()..fetchCompanies();
+  final invoiceCubit = getIt<InvoiceCubit>()..fetchInvoices(ApiKey.xSchema);
+  final userCubit = getIt<UserCubit>()..getUserProfile();
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<ThemeBloc>.value(value: themeBloc),
-        
         BlocProvider<NavCubit>(
           create: (_) => NavCubit(),
         ),
-        BlocProvider<CompanyCubit>.value(
-            value: getIt<CompanyCubit>()..fetchCompanies()),
-        BlocProvider<InvoiceCubit>.value(
-            value: getIt<InvoiceCubit>()..fetchInvoices(ApiKey.xSchema)),
+        // BlocProvider<InvoiceCubit>.value(
+        //     value: getIt<InvoiceCubit>()..fetchInvoices(ApiKey.xSchema)),
+        // BlocProvider<UserCubit>.value(
+        //     value: getIt<UserCubit>()..getUserProfile()),
+        // BlocProvider<CompanyCubit>.value(
+        //     value: getIt<CompanyCubit>()..fetchCompanies()),
+        BlocProvider<UserCubit>.value(value: userCubit),
+        BlocProvider<CompanyCubit>.value(value: companyCubit),
+
+        BlocProvider<InvoiceCubit>.value(value: invoiceCubit),
       ],
       child: const MyApp(),
     ),

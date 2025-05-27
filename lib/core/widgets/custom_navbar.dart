@@ -48,8 +48,8 @@ class NavigationBarItems extends StatelessWidget {
                         AppStrings.companies.tr, 1, selectedIndex),
                     _buildNavItem(context, 'assets/icons/setting.png',
                         AppStrings.settings.tr, 2, selectedIndex),
-                    _buildNavItem(context, 'assets/icons/notification.png',
-                        AppStrings.notifications.tr, 3, selectedIndex),
+                    _buildNavItem(context, 'assets/icons/photo.png',
+                        AppStrings.profile.tr, 3, selectedIndex),
                   ],
                 ),
               ),
@@ -163,7 +163,7 @@ class NavigationBarItems extends StatelessWidget {
       case 2:
         return '/settings';
       case 3:
-        return '/notifications';
+        return '/profile';
       default:
         return '/homeView';
     }

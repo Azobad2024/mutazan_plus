@@ -16,7 +16,7 @@ class InvoiceMaterialsModel extends InvoiceMaterialsEntity {
 
   factory InvoiceMaterialsModel.fromJson(Map<String, dynamic> json) {
     return InvoiceMaterialsModel(
-      id: json[ApiKey.id] as int,
+      id: json[ApiKey.invoiceId] as int,
       material: json[ApiKey.material] as int,
       materialName: json[ApiKey.materialName] as String,
       quantity: json[ApiKey.quantity] as String,
@@ -24,7 +24,7 @@ class InvoiceMaterialsModel extends InvoiceMaterialsEntity {
   }
 
   Map<String, dynamic> toJson() => {
-        ApiKey.id: id,
+        ApiKey.invoiceId: id,
         ApiKey.material: material,
         ApiKey.materialName: materialName,
         ApiKey.quantity: quantity,

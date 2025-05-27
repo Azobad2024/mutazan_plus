@@ -52,6 +52,7 @@ abstract class AppStrings {
   static const language = 'language';
   static const theme = 'theme';
   static const privacyPolicy = 'privacyPolicy';
+  static const profile = 'profile';
 
     // Notifications
   static const notification         = 'notification';

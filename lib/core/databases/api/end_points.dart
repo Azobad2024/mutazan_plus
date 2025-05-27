@@ -7,27 +7,24 @@ class EndPoint {
 
   // تسجيل الدخول
   static const String signIn = "$apiPrefix/login/";
+  // الملف الشخصي 
+  static String getUserDataMe() => '$apiPrefix/user-profile/me/';
+
 
   // الشركات (عرض )
   static const String companies = "$apiPrefix/companies/";
   // الفواتير
   static String invoices = "$apiPrefix/invoices";
   
-  
-  // جديد: إبلاغ مخالفة
-  static String reportInvoice(int id) => "$apiPrefix/invoices/$id/report/";
-  
-  // جديد: تأكيد فاتورة
-  // static String verifyInvoice(int id) => "$apiPrefix/invoices/$id/verify/";
 }
 
 class ApiKey {
-  static String id = "id";
+  static String id = "user_id";
   static String schemaName = "schema_name";
+  static String companyId = "id";
   static String companyName = "company_name";
   static String businessType = "business_type";
   static String registrationNumber = "registration_number";
-  static String phoneNumber = "phone_number";
   static String logo = "logo";
   static String employeesCount = "employees_count";
   static String foundedDate = "founded_date";
@@ -38,10 +35,6 @@ class ApiKey {
   static String name = "name";
   static String active = "active";
   static String country = "country";
-  static String username = "username";
-  static String email = "email";
-  static String address = "address";
-  static String street = "street";
   static String company = "company";
   static String companys = "companys";
   static String status = "status";
@@ -66,4 +59,10 @@ class ApiKey {
   static String loadedWeightInv = "loaded_weight_inv";
   static String invoiceMaterials = "invoice_materials";
   static String isVerified = "is_verified";
+  // Profile
+  static String profilePic = "profile_picture";
+  static String username = "username";
+  static String email = "email";
+  static String address = "address";
+  static String phoneNumber = "phone_number";
 }

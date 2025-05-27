@@ -59,21 +59,21 @@ final horizontalPadding = resp.ResponsiveValue<double>(
         backgroundColor: AppColors.backgroundColor,
         automaticallyImplyLeading: false,
         title: const HeaderWidget(),
-        actions: [
-          StreamBuilder<DataConnectionStatus>(
-            stream: DataConnectionChecker().onStatusChange,
-            builder: (ctx, snap) {
-              final ok = snap.data == DataConnectionStatus.connected;
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: CircleAvatar(
-                  radius: circleRadius,
-                  backgroundColor: ok ? AppColors.success : AppColors.error,
-                ),
-              );
-            },
-          ),
-        ],
+        // actions: [
+        //   StreamBuilder<DataConnectionStatus>(
+        //     stream: DataConnectionChecker().onStatusChange,
+        //     builder: (ctx, snap) {
+        //       final ok = snap.data == DataConnectionStatus.connected;
+        //       return Padding(
+        //         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        //         child: CircleAvatar(
+        //           radius: circleRadius,
+        //           backgroundColor: ok ? AppColors.success : AppColors.error,
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ],
       ),
       body: SafeArea(
         bottom: false,

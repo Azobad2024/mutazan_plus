@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:mutazan_plus/core/utils/app_colors.dart';
+import 'package:mutazan_plus/core/utils/app_strings.dart';
 import 'package:mutazan_plus/core/widgets/container_radius.dart';
-import 'package:mutazan_plus/features/home/presentation/cubit/home_cubit.dart';
-import 'package:mutazan_plus/core/widgets/custom_navbar.dart';
 
 class Notifications extends StatefulWidget {
   const Notifications({super.key});
@@ -48,7 +46,7 @@ class _NotificationsState extends State<Notifications> {
         backgroundColor: AppColors.backgroundColor,
         automaticallyImplyLeading: false,
         title: Text(
-          'notifications'.tr,
+          AppStrings.notifications.tr,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 28,
@@ -134,17 +132,17 @@ class _NotificationsState extends State<Notifications> {
         ),
       ),
     
-      bottomNavigationBar: BlocBuilder<NavCubit, int>(
-        builder: (context, selectedIndex) {
-          return Container(
-            color:Theme.of(context).canvasColor,
-            // padding: const EdgeInsets.symmetric(vertical: 8),
-            child: NavigationBarItems(
-              showBarcode: false,
-            ),
-          );
-        },
-      ),
+      // bottomNavigationBar: BlocBuilder<NavCubit, int>(
+      //   builder: (context, selectedIndex) {
+      //     return Container(
+      //       color:Theme.of(context).canvasColor,
+      //       // padding: const EdgeInsets.symmetric(vertical: 8),
+      //       child: NavigationBarItems(
+      //         showBarcode: false,
+      //       ),
+      //     );
+      //   },
+      // ),
     );
   }
 }

@@ -45,10 +45,17 @@ void setupServiceLocator() {
       networkInfo: getIt<NetworkInfo>(),
     ),
   );
+  // getIt.registerFactory<UserCubit>(
+  //   () => UserCubit(getIt<UserRepository>()),
+  // );
   getIt.registerFactory<UserCubit>(
-    () => UserCubit(getIt<UserRepository>()),
+    () => UserCubit(
+      getIt<UserRepository>(),
+      getIt<UserRepository>(),
+      true,
+      getIt<CacheHelper>(),
+    ),
   );
-
   // -------- Company --------
 
   // 1. Data sources
@@ -74,9 +81,9 @@ void setupServiceLocator() {
   );
 
   // 4. Cubit
-  getIt.registerLazySingleton<CompanyCubit>(
-    () => CompanyCubit(getCompanies: getIt<GetCompanies>()),
-  );
+getIt.registerLazySingleton<CompanyCubit>(
+  () => CompanyCubit(getCompanies: getIt<GetCompanies>()),
+);
 
   // -------- Invoice --------
 
